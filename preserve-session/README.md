@@ -62,6 +62,11 @@ claude
 /preserve-session:doctor
 ```
 
+## Understanding doctor output
+
+- **Hook not in settings.json** — the hook is still active; it does not need to appear in `settings.json` to work.
+- **Path mismatch / stale registry entry** — run `/preserve-session:fix` to update the registry to the current path and clean up stale entries.
+
 ## Notes
 
 - **Add `.claude/hash.txt` to `.gitignore`** — in team projects, sharing the same UUID causes registry conflicts

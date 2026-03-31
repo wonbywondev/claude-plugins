@@ -59,6 +59,11 @@ claude
 /preserve-session:doctor
 ```
 
+## doctor 출력 해석
+
+- **Hook not in settings.json** — `settings.json`에 없어도 훅은 활성 상태입니다.
+- **Path mismatch / stale registry entry** — `/preserve-session:fix`를 실행하면 레지스트리를 현재 경로로 업데이트하고 stale 항목을 정리합니다.
+
 ## 주의사항
 
 - **`.claude/hash.txt`를 `.gitignore`에 추가 권장** — 팀 프로젝트에서 여러 사람이 같은 UUID를 공유하면 레지스트리 충돌 가능
