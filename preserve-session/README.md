@@ -1,5 +1,7 @@
 # preserve-session
 
+[한국어](./README.ko.md)
+
 Preserves Claude Code session history across project directory renames, moves, and copies.
 
 ## Problem
@@ -58,6 +60,12 @@ claude
 ```
 /preserve-session:doctor
 ```
+
+## Notes
+
+- **Add `.claude/hash.txt` to `.gitignore`** — in team projects, sharing the same UUID causes registry conflicts
+- **`project-registry.json` is local only** — do not include in backups or sync tools
+- **Quit Claude Code before running `/fix`** — prevents conflicts during session folder rename
 
 ## Files
 
