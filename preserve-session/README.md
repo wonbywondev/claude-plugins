@@ -69,6 +69,7 @@ claude
 
 ## Notes
 
+- **Use the terminal, not the VS Code extension** — plugin commands and session history browsing are not fully supported in the VS Code extension. Use `claude` in a terminal for the best experience.
 - **Add `.claude/hash.txt` to `.gitignore`** — in team projects, sharing the same UUID causes registry conflicts
 - **`project-registry.json` is local only** — do not include in backups or sync tools
 - **Quit Claude Code before running `/fix`** — prevents conflicts during session folder rename
