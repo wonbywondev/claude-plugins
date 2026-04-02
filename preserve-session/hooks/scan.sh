@@ -100,30 +100,10 @@ for TARGET in "$@"; do
 
   mkdir -p "$TARGET/.claude"
   HASH=$(uuidgen_cross)
+
+  # Write registry first — if this fails, hash.txt stays absent (no inconsistency)
+  registry_write "$HASH" "$TARGET"
   echo "$HASH" > "$HASH_FILE"
-
-  PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" PRESERVE_PATH="$TARGET" "$PYTHON" - <<'PYEOF'
-import json, os, sys
-
-registry_path = os.environ["PRESERVE_REGISTRY"]
-new_hash = os.environ["PRESERVE_HASH"]
-new_path = os.environ["PRESERVE_PATH"]
-
-try:
-    with open(registry_path) as f:
-        r = json.load(f)
-except (FileNotFoundError, json.JSONDecodeError, ValueError):
-    r = {}
-
-r[new_hash] = new_path
-
-try:
-    with open(registry_path, "w") as f:
-        json.dump(r, f, indent=2)
-except OSError as e:
-    print(f"preserve-session: failed to write registry: {e}", file=sys.stderr)
-    sys.exit(1)
-PYEOF
 
   echo "  initialized: $TARGET"
   (( INITIALIZED++ )) || true

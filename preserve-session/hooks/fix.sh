@@ -39,7 +39,7 @@ import json, os
 try:
     with open(os.environ["PRESERVE_REGISTRY"]) as f:
         r = json.load(f)
-except (json.JSONDecodeError, ValueError):
+except (FileNotFoundError, json.JSONDecodeError, ValueError):
     r = {}
 print(r.get(os.environ["PRESERVE_HASH"], ""))
 PYEOF
@@ -47,21 +47,7 @@ PYEOF
 
 if [[ -z "$REGISTERED" ]]; then
   echo "preserve-session: hash not found in registry. Re-registering current path..."
-  PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" PRESERVE_PATH="$REAL_PWD" "$PYTHON" - <<'PYEOF'
-import json, os, sys
-registry_path = os.environ["PRESERVE_REGISTRY"]
-hash_val      = os.environ["PRESERVE_HASH"]
-real_pwd      = os.environ["PRESERVE_PATH"]
-try:
-    with open(registry_path) as f:
-        r = json.load(f)
-except (json.JSONDecodeError, ValueError):
-    print("preserve-session: registry is corrupted. Fix or delete ~/.claude/project-registry.json and retry.", file=sys.stderr)
-    sys.exit(1)
-r[hash_val] = real_pwd
-with open(registry_path, "w") as f:
-    json.dump(r, f, indent=2)
-PYEOF
+  registry_write "$HASH" "$REAL_PWD" strict
   echo "Done. Registered: $REAL_PWD"
   exit 0
 fi
@@ -81,23 +67,10 @@ if [[ -d "$REGISTERED" ]]; then
   echo "Registering as independent project..."
 
   NEW_HASH=$(uuidgen_cross)
-  echo "$NEW_HASH" > "$HASH_FILE"
 
-  PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$NEW_HASH" PRESERVE_PATH="$REAL_PWD" "$PYTHON" - <<'PYEOF'
-import json, os, sys
-registry_path = os.environ["PRESERVE_REGISTRY"]
-hash_val      = os.environ["PRESERVE_HASH"]
-real_pwd      = os.environ["PRESERVE_PATH"]
-try:
-    with open(registry_path) as f:
-        r = json.load(f)
-except (json.JSONDecodeError, ValueError):
-    print("preserve-session: registry is corrupted. Fix or delete ~/.claude/project-registry.json and retry.", file=sys.stderr)
-    sys.exit(1)
-r[hash_val] = real_pwd
-with open(registry_path, "w") as f:
-    json.dump(r, f, indent=2)
-PYEOF
+  # Write registry first — if this fails, hash.txt stays unchanged (no inconsistency)
+  registry_write "$NEW_HASH" "$REAL_PWD" strict
+  echo "$NEW_HASH" > "$HASH_FILE"
 
   echo "Done."
   echo "  new hash: $NEW_HASH"
@@ -172,21 +145,7 @@ else
     echo "  (no sessions folder found — nothing to rename)"
   fi
 
-  PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" PRESERVE_PATH="$REAL_PWD" "$PYTHON" - <<'PYEOF'
-import json, os, sys
-registry_path = os.environ["PRESERVE_REGISTRY"]
-hash_val      = os.environ["PRESERVE_HASH"]
-real_pwd      = os.environ["PRESERVE_PATH"]
-try:
-    with open(registry_path) as f:
-        r = json.load(f)
-except (json.JSONDecodeError, ValueError):
-    print("preserve-session: registry is corrupted. Fix or delete ~/.claude/project-registry.json and retry.", file=sys.stderr)
-    sys.exit(1)
-r[hash_val] = real_pwd
-with open(registry_path, "w") as f:
-    json.dump(r, f, indent=2)
-PYEOF
+  registry_write "$HASH" "$REAL_PWD" strict
 
   echo "Done. Session history recovered."
   echo "You can now use 'claude --resume' or 'claude --continue'."

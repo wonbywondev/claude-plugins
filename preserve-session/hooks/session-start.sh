@@ -15,11 +15,6 @@ mkdir -p "$CLAUDE_DIR"
 # shellcheck source=common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# Initialize registry if it doesn't exist
-if [[ ! -f "$REGISTRY" ]]; then
-  echo '{}' > "$REGISTRY"
-fi
-
 # If hash.txt already exists, verify it is also registered (re-register if not)
 if [[ -f "$HASH_FILE" ]]; then
   HASH=$(cat "$HASH_FILE")
@@ -29,7 +24,7 @@ import json, os
 try:
     with open(os.environ["PRESERVE_REGISTRY"]) as f:
         r = json.load(f)
-except (json.JSONDecodeError, ValueError):
+except (FileNotFoundError, json.JSONDecodeError, ValueError):
     r = {}
 print(r.get(os.environ["PRESERVE_HASH"], ""))
 PYEOF
@@ -49,25 +44,4 @@ else
 fi
 
 # Add entry to registry: { "hash": "/current/path", ... }
-PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" PRESERVE_PATH="$REAL_PWD" "$PYTHON" - <<'PYEOF'
-import json, os, sys
-
-registry_path = os.environ["PRESERVE_REGISTRY"]
-hash_val      = os.environ["PRESERVE_HASH"]
-real_pwd      = os.environ["PRESERVE_PATH"]
-
-try:
-    with open(registry_path) as f:
-        registry = json.load(f)
-except (json.JSONDecodeError, ValueError):
-    registry = {}
-
-registry[hash_val] = real_pwd
-
-try:
-    with open(registry_path, "w") as f:
-        json.dump(registry, f, indent=2)
-except OSError as e:
-    print(f"preserve-session: failed to write registry: {e}", file=sys.stderr)
-    sys.exit(1)
-PYEOF
+registry_write "$HASH" "$REAL_PWD"
