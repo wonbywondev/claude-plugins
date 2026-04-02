@@ -12,14 +12,8 @@ HASH_FILE="$CLAUDE_DIR/hash.txt"
 # Ensure .claude/ directory exists
 mkdir -p "$CLAUDE_DIR"
 
-# Generate a UUID (cross-platform)
-uuidgen_cross() {
-  if command -v uuidgen &>/dev/null; then
-    uuidgen | tr '[:upper:]' '[:lower:]'
-  else
-    cat /proc/sys/kernel/random/uuid 2>/dev/null || python3 -c "import uuid; print(uuid.uuid4())"
-  fi
-}
+# shellcheck source=common.sh
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 # Initialize registry if it doesn't exist
 if [[ ! -f "$REGISTRY" ]]; then
@@ -30,7 +24,7 @@ fi
 if [[ -f "$HASH_FILE" ]]; then
   HASH=$(cat "$HASH_FILE")
   if [[ -n "$HASH" ]]; then
-    REGISTERED=$(PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" python3 - <<'PYEOF'
+    REGISTERED=$(PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" "$PYTHON" - <<'PYEOF'
 import json, os
 try:
     with open(os.environ["PRESERVE_REGISTRY"]) as f:
@@ -44,6 +38,10 @@ PYEOF
       exit 0
     fi
     # hash.txt exists but not in registry — fall through to re-register
+  else
+    # hash.txt exists but is empty — reinitialize
+    HASH=$(uuidgen_cross)
+    echo "$HASH" > "$HASH_FILE"
   fi
 else
   HASH=$(uuidgen_cross)
@@ -51,7 +49,7 @@ else
 fi
 
 # Add entry to registry: { "hash": "/current/path", ... }
-PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" PRESERVE_PATH="$REAL_PWD" python3 - <<'PYEOF'
+PRESERVE_REGISTRY="$REGISTRY" PRESERVE_HASH="$HASH" PRESERVE_PATH="$REAL_PWD" "$PYTHON" - <<'PYEOF'
 import json, os, sys
 
 registry_path = os.environ["PRESERVE_REGISTRY"]

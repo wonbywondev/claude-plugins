@@ -8,33 +8,8 @@ set -euo pipefail
 
 REGISTRY="$HOME/.claude/project-registry.json"
 
-path_to_slug() {
-  local resolved
-  resolved=$(realpath "$1" 2>/dev/null || echo "$1")
-  echo "$resolved" | LC_ALL=C sed 's|[^[:alnum:]-]|-|g'
-}
-
-find_python() {
-  for candidate in python3 python /usr/bin/python3 /usr/local/bin/python3; do
-    if command -v "$candidate" &>/dev/null 2>&1 && \
-       "$candidate" -c "import sys; sys.exit(0 if sys.version_info >= (3,6) else 1)" 2>/dev/null; then
-      echo "$candidate"
-      return 0
-    fi
-  done
-  echo "preserve-session: no usable python3 found" >&2
-  exit 1
-}
-
-PYTHON=$(find_python)
-
-uuidgen_cross() {
-  if command -v uuidgen &>/dev/null; then
-    uuidgen | tr '[:upper:]' '[:lower:]'
-  else
-    "$PYTHON" -c "import uuid; print(uuid.uuid4())"
-  fi
-}
+# shellcheck source=common.sh
+source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 MODE="${1:-}"
 
