@@ -32,7 +32,7 @@ claude --plugin-dir /path/to/plugins/preserve-session
 | `/preserve-session:fix` | Recover sessions after a rename or move. Also handles copy detection |
 | `/preserve-session:inherit` | Copy session history from another project into the current one |
 | `/preserve-session:doctor` | Diagnose the current project's preserve-session state |
-| `/preserve-session:scan` | Scan a directory for unregistered projects and bulk-initialize them |
+| `/preserve-session:scan` | Scan a directory for unregistered projects and bulk-initialize them _(coming soon)_ |
 | `/preserve-session:uninstall` | Permanently remove all preserve-session data (registry and hash files) |
 | `/preserve-session:cleanup` | List all registered projects and remove selected entries from the registry |
 
