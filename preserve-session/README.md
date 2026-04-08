@@ -15,6 +15,7 @@ Each project gets a path-independent UUID stored in `.claude/hash.txt`. A global
 ## Installation
 
 ```
+claude marketplace add https://github.com/wonbywondev/claude-plugins
 claude plugin install preserve-session
 ```
 
