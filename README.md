@@ -14,6 +14,7 @@ Each project gets a path-independent UUID (`hash.txt`). A global registry maps U
 
 **Install:**
 ```
+claude marketplace add https://github.com/wonbywondev/claude-plugins
 claude plugin install preserve-session
 ```
 
