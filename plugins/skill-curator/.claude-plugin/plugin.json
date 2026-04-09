@@ -1,0 +1,6 @@
+{
+  "name": "skill-curator",
+  "version": "1.0.0",
+  "description": "Auto-classifies skills as global vs project-specific and recommends matching skills from central repository for new projects.",
+  "author": { "name": "won", "email": "wonbywondev@gmail.com" }
+}

@@ -1,0 +1,27 @@
+{
+  "description": "Scans project stack and suggests matching skills from central repository",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/post-plan.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

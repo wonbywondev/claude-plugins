@@ -16,7 +16,18 @@
         "name": "won",
         "email": "wonbywondev@gmail.com"
       },
-      "source": "./preserve-session",
+      "source": "./plugins/preserve-session",
+      "category": "productivity"
+    },
+    {
+      "name": "skill-curator",
+      "description": "Auto-classifies skills as global vs project-specific and recommends matching skills from central repository for new projects",
+      "version": "1.0.0",
+      "author": {
+        "name": "won",
+        "email": "wonbywondev@gmail.com"
+      },
+      "source": "./plugins/skill-curator",
       "category": "productivity"
     }
   ]
