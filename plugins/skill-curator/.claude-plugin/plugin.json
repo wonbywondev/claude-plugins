@@ -2,5 +2,8 @@
   "name": "skill-curator",
   "version": "1.0.0",
   "description": "Auto-classifies skills as global vs project-specific and recommends matching skills from central repository for new projects.",
-  "author": { "name": "won", "email": "wonbywondev@gmail.com" }
+  "author": { "name": "won", "email": "wonbywondev@gmail.com" },
+  "homepage": "https://github.com/wonbywondev/claude-plugins/tree/main/plugins/skill-curator",
+  "license": "MIT",
+  "keywords": ["skills", "curator", "classifier", "recommender"]
 }
