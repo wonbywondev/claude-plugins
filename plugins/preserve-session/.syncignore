@@ -1,0 +1,11 @@
+# Files excluded from sync-to-fork.sh
+# Each line is a path relative to this plugin directory.
+# These files exist in both the marketplace and the fork, but they may
+# legitimately diverge — sync should not overwrite the fork's version.
+#
+# Lines starting with # are comments. Blank lines are ignored.
+
+# READMEs: the marketplace version contains personal-marketplace install
+# instructions that do not belong in the upstream PR version.
+README.md
+README.ko.md
