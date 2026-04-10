@@ -1,2 +1,16 @@
-.claude/hash.txt
-.claude/settings.local.json
+# Preserve-session plugin artifacts (must not be shared — cause registry collisions)
+**/.claude/hash.txt
+**/.claude/settings.local.json
+
+# Local-only development docs (compass/ under any plugin)
+**/compass/
+
+# Build artifacts
+**/node_modules/
+**/dist/
+**/.next/
+**/.cache/
+
+# Local-only dev files (not published to marketplace)
+/CLAUDE.md
+/scripts/
