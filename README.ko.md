@@ -6,7 +6,7 @@ wonbywondev의 개인 [Claude Code](https://claude.ai/code) 플러그인 모음.
 
 ## 플러그인
 
-### [preserve-session](./plugins/preserve-session)
+### [preserve-session](./plugins/preserve-session/README.ko.md)
 
 프로젝트 디렉토리 이름 변경, 이동, 복사 시에도 Claude Code 세션 히스토리를 보존합니다.
 
