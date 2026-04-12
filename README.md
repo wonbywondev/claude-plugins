@@ -2,7 +2,7 @@
 
 [한국어](./README.ko.md)
 
-A personal collection of plugins for [Claude Code](https://claude.ai/code).
+Personal [Claude Code](https://claude.ai/code) plugins by wonbywondev.
 
 ## Plugins
 

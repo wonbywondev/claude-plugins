@@ -2,7 +2,7 @@
 
 [English](./README.md)
 
-[Claude Code](https://claude.ai/code)용 개인 플러그인 모음입니다.
+wonbywondev의 개인 [Claude Code](https://claude.ai/code) 플러그인 모음.
 
 ## 플러그인
 
