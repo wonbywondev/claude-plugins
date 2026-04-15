@@ -41,7 +41,7 @@ claude --plugin-dir /path/to/plugins/preserve-session
 | `/preserve-session:uninstall` | Permanently remove all preserve-session data (registry and hash files) |
 | ~~`/preserve-session:inherit`~~ | **Deprecated in v1.2.0** — use `copy` or `move` instead. Will be removed in a future major version. |
 | `/preserve-session:scan` | Scan a directory for unregistered projects and bulk-initialize them _(coming soon)_ |
-| `/preserve-session:cleanup` | List all registered projects and remove selected entries from the registry _(coming soon)_ |
+| `/preserve-session:cleanup` | **(v1.3.0)** List all registered projects and remove selected entries from the registry. For stale entries, optionally also delete the associated session folder under `~/.claude/projects/<slug>/`. |
 
 ## Typical workflows
 
@@ -88,7 +88,7 @@ claude
 - **Use the terminal, not the VS Code extension** — plugin commands and session history browsing are not fully supported in the VS Code extension. Use `claude` in a terminal for the best experience.
 - **Add `.claude/hash.txt` to `.gitignore`** — in team projects, sharing the same UUID causes registry conflicts
 - **`project-registry.json` is local only** — do not include in backups or sync tools
-- **Quit Claude Code before running `/fix`** — prevents conflicts during session folder rename. If the destination sessions folder already exists (e.g. a new session was started before running `/fix`), sessions are merged automatically and the old folder is left in place. Run `/preserve-session:cleanup` (coming soon) to remove stale session folders.
+- **Quit Claude Code before running `/fix`** — prevents conflicts during session folder rename. If the destination sessions folder already exists (e.g. a new session was started before running `/fix`), sessions are merged automatically and the old folder is left in place. Run `/preserve-session:cleanup` (v1.3.0) to remove stale registry entries — and optionally the leftover session folder.
 - **Use ASCII-only directory names** — Claude Code maps all non-ASCII characters to `-` when computing project slugs. Two different non-ASCII paths of the same structure (e.g. same character counts per segment) can produce identical slugs, causing their sessions to be stored in the same folder. This affects `/preserve-session:copy` and `/preserve-session:move`, which copy/migrate all sessions from the slug directory without distinguishing between projects. Run `/preserve-session:doctor` to check whether your current project path contains non-ASCII characters.
 - **macOS: non-ASCII paths work correctly** — macOS `realpath` returns NFD-normalized Unicode paths, but Claude Code uses NFC when computing project slugs. The hooks normalize paths to NFC before slug computation to ensure they match.
 

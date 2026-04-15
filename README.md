@@ -12,7 +12,7 @@ Preserves Claude Code session history across project directory renames, moves, a
 
 Each project gets a path-independent UUID stored in `.claude/hash.txt`. A global registry maps UUID → current path. When a directory is renamed or moved, running `/preserve-session:fix` renames the internal sessions folder and updates the registry, restoring access to all previous sessions.
 
-**Commands:** `fix` · `copy` · `move` · `doctor` · `uninstall` &nbsp;·&nbsp; ~~`inherit`~~ _(deprecated in v1.2.0 — use `copy` or `move`)_
+**Commands:** `fix` · `copy` · `move` · `cleanup` · `doctor` · `uninstall` &nbsp;·&nbsp; ~~`inherit`~~ _(deprecated in v1.2.0 — use `copy` or `move`)_
 
 **Hook:** `SessionStart` — auto-initializes `.claude/hash.txt` on first run
 
