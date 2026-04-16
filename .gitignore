@@ -14,3 +14,6 @@
 # Local-only dev files (not published to marketplace)
 /CLAUDE.md
 /scripts/
+
+# sync-to-fork local meta
+**/.syncignore
