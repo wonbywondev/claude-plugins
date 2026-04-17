@@ -1,17 +1,18 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "wonbywondev-plugins",
-  "version": "1.0.0",
-  "description": "Personal Claude Code plugins by wonbywondev",
   "owner": {
     "name": "won",
     "email": "wonbywondev@gmail.com"
+  },
+  "metadata": {
+    "description": "Personal Claude Code plugins by wonbywondev",
+    "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "preserve-session",
       "description": "Preserves Claude Code session history across project directory renames, moves, and copies by assigning each project a path-independent UUID",
-      "version": "1.1.1",
+      "version": "1.3.1",
       "author": {
         "name": "won",
         "email": "wonbywondev@gmail.com"
