@@ -1,19 +1,18 @@
 # preserve-session
 
-프로젝트 디렉토리 이름 변경, 이동, 복사 시에도 Claude Code 세션 히스토리를 보존합니다.
+프로젝트 폴더 이름을 바꾸거나 다른 곳으로 옮겨도 이전 Claude Code 대화가 사라지지 않게 해줍니다.
 
 ## 데모
 
 https://github.com/user-attachments/assets/05a3dd4b-dfaa-4540-a2f1-e0c2bf6583af
 
+## 왜 필요한가요
 
-## 문제
+Claude Code는 프로젝트 폴더 위치로 대화 기록을 찾습니다. 그래서 폴더 이름을 바꾸거나 다른 곳으로 옮기면 `/resume`에서 이전 대화가 안 보이게 됩니다.
 
-Claude Code는 디렉토리 경로를 기준으로 프로젝트를 식별합니다. 프로젝트 디렉토리를 이름 변경하거나 이동하면 이전 세션 히스토리에 접근할 수 없게 됩니다.
+## 해결법 (한 줄)
 
-## 동작 방식
-
-각 프로젝트에 `.claude/hash.txt`에 저장되는 경로 독립적인 UUID가 부여됩니다. 글로벌 레지스트리(`~/.claude/project-registry.json`)가 각 UUID를 현재 경로에 매핑합니다. 경로가 변경되면 `/preserve-session:fix`를 실행하여 내부 세션 폴더 이름을 새 경로에 맞게 변경하고, 이전 세션에 대한 접근을 복원합니다.
+옮긴 자리에서 `/preserve-session:fix` 한 번 실행하면 끝. 플러그인이 프로젝트마다 고유 번호를 붙여 기억해두기 때문에, 대화 기록을 새 위치로 맞춰줍니다.
 
 ## 설치
 
@@ -22,81 +21,114 @@ claude marketplace add https://github.com/wonbywondev/claude-plugins
 claude plugin install preserve-session
 ```
 
-`SessionStart` 훅이 플러그인에 포함되어 설치 시 자동으로 활성화됩니다. 별도 설정이 필요하지 않습니다.
+설치 후 별도 설정 불필요. 자동으로 활성화됩니다.
 
-**로컬 테스트:**
+**로컬 테스트용:**
 ```
 claude --plugin-dir /path/to/plugins/preserve-session
 ```
 
-## 커맨드
+## 어떤 명령어를 써야 하나요?
 
-| 커맨드 | 설명 |
-|--------|------|
-| `/preserve-session:fix` | 이름 변경 또는 이동 후 세션 복구. 복사 감지도 처리 |
-| `/preserve-session:copy` | **(v1.2.0)** 비파괴적 — 독립 복사본 생성 (새 `sessionId` / 파일명 / rewritten `cwd`). 원본 프로젝트는 건드리지 않음. |
-| `/preserve-session:move` | **(v1.2.0)** 파괴적 — 원본의 세션 파일을 현재 프로젝트로 이동. 원본 slug 폴더는 비워짐. Ctrl+A `/resume` picker 필터를 위해 `cwd` rewrite. |
-| `/preserve-session:doctor` | 현재 프로젝트의 preserve-session 상태 진단 |
-| `/preserve-session:uninstall` | preserve-session이 생성한 모든 데이터(레지스트리 및 hash 파일) 영구 삭제 |
-| ~~`/preserve-session:inherit`~~ | **v1.2.0에서 deprecated** — `copy` 또는 `move` 사용. 추후 메이저 버전에서 제거 예정. |
-| `/preserve-session:scan` | 지정한 디렉토리에서 미등록 프로젝트를 탐색하여 일괄 초기화 _(출시 예정)_ |
-| `/preserve-session:cleanup` | **(v1.3.0)** 등록된 프로젝트 목록을 표시하고 선택한 항목을 registry에서 제거. stale 항목의 경우 `~/.claude/projects/<slug>/` 세션 폴더까지 함께 삭제하는 옵션 제공 |
+평소엔 `/preserve-session:fix` 하나면 충분합니다. 나머지는 특수 상황용.
 
-## 주요 워크플로우
+| 이럴 때 | 이 명령어 |
+|---------|-----------|
+| 프로젝트 이름 바꾸거나 옮겼는데 이전 대화가 안 보일 때 | `/preserve-session:fix` |
+| 프로젝트를 복사해놓고, 복사본에 이전 대화 **사본**을 남기고 싶을 때 (원본은 그대로) | `/preserve-session:copy` |
+| 프로젝트를 복사해놓고, 이전 대화를 복사본으로 **완전히 옮기고** 싶을 때 (원본은 비워짐) | `/preserve-session:move` |
+| 뭔가 이상하다 싶을 때 — 현재 상태 점검 | `/preserve-session:doctor` |
+| (선택) 오래된 기록 정리하거나 디스크 공간 비우기 | `/preserve-session:cleanup` |
+| 플러그인 지우고 관련 데이터 전부 삭제 | `/preserve-session:uninstall` |
 
-**디렉토리 이름 변경 후:**
+> **`/cleanup`은 꼭 써야 하나요?** — 아니요. Claude Code가 30일 지난 오래된 대화 파일은 알아서 지워줍니다. 그 전에 빨리 디스크 공간을 비우고 싶거나 목록을 깔끔히 유지하고 싶을 때만 쓰면 됩니다. *(v1.3.0에서 추가, v1.3.1에서 한글 경로 사용자 대상 안전 강화)*
+
+> **참고:**
+> - ~~`/preserve-session:inherit`~~ 는 v1.2.0부터 의미가 명확한 `copy`와 `move`로 나뉘었습니다. 앞으론 `copy` 또는 `move`를 쓰세요. (`inherit`은 언젠가 완전히 사라집니다.)
+> - `/preserve-session:scan` (여러 프로젝트 한꺼번에 등록)은 계획 중이고 아직 나오지 않았습니다.
+
+## 자주 쓰는 흐름
+
+**폴더 이름을 바꾼 뒤:**
 ```
 cd /new/project/name
 claude
 /preserve-session:fix
 ```
 
-**프로젝트 복사 후 (새로 시작, 원본 보호):**
+**프로젝트를 복사한 뒤 (새로 시작하고 원본은 그대로 두고 싶음):**
 ```
-# 별도 조치 불필요 — /fix 실행 시 자동으로 독립 프로젝트로 등록됨
-```
-
-**프로젝트 복사 후 (이전 세션 독립 복사본 원할 때):**
-```
-/preserve-session:fix                          # 먼저 독립 복사본으로 등록
-/preserve-session:copy                         # 등록된 프로젝트 목록; Claude가 어느 걸 복사할지 물음
+# 아무것도 할 필요 없음 — 복사본에서 claude를 실행하면
+# 플러그인이 알아서 새 프로젝트로 등록해줍니다
 ```
 
-**프로젝트 복사 후 (이전 세션을 완전히 이관하고 원본은 폐기):**
+**프로젝트를 복사한 뒤 (복사본에 이전 대화 사본을 두고 싶음):**
 ```
-/preserve-session:fix                          # 먼저 독립 복사본으로 등록
-/preserve-session:move                         # 등록된 프로젝트 목록; Claude가 어느 걸 이동할지 물음
+/preserve-session:fix             # 먼저 새 프로젝트로 등록
+/preserve-session:copy            # Claude가 어느 프로젝트에서 가져올지 물어봄
 ```
 
-> `copy`는 새 `sessionId`로 독립 복사본을 만들어 원본 세션은 그대로 남깁니다.
-> `move`는 원본의 `.jsonl`을 현재 프로젝트로 이동하고 원본 slug 폴더를 비웁니다.
+**프로젝트를 복사한 뒤 (이전 대화를 복사본으로 완전히 옮기고 원본은 버림):**
+```
+/preserve-session:fix             # 먼저 새 프로젝트로 등록
+/preserve-session:move            # Claude가 어느 프로젝트에서 가져올지 물어봄
+```
+
+> `copy`는 복사본을 만들어서 넣어둡니다 — 원본 쪽 대화도 그대로 남아요.
+> `move`는 원본에서 대화를 빼서 옮깁니다 — 원본 쪽은 비워집니다.
 
 **현재 상태 확인:**
 ```
 /preserve-session:doctor
 ```
 
-## doctor 출력 해석
+## doctor 결과 읽는 법
 
-- **Hook not in settings.json** — `settings.json`에 없어도 훅은 활성 상태입니다.
-- **Path mismatch / stale registry entry** — `/preserve-session:fix`를 실행하면 레지스트리를 현재 경로로 업데이트하고 stale 항목을 정리합니다.
+- `~ hook not found in settings.json` — 정상입니다. 설정 파일에 없어도 플러그인이 알아서 처리.
+- `✗ path mismatch` — 프로젝트 폴더가 옮겨졌는데 기록이 아직 갱신 안 됨. `/preserve-session:fix` 실행하세요.
+- `⚠ slug collision` — 다른 프로젝트와 내부 폴더명이 겹칩니다. 주로 한글·일본어·중국어 등 비 ASCII 경로에서 발생 (아래 전용 섹션 참고).
 
 ## 주의사항
 
-- **VS Code 익스텐션보다 터미널 사용을 권장합니다** — 플러그인 커맨드와 세션 히스토리 조회는 VS Code 익스텐션에서 완전히 지원되지 않습니다. 터미널에서 `claude`를 사용하세요.
-- **`.claude/hash.txt`를 `.gitignore`에 추가 권장** — 팀 프로젝트에서 여러 사람이 같은 UUID를 공유하면 레지스트리 충돌 가능
-- **`project-registry.json`은 로컬 전용** — 백업 또는 동기화 도구에 포함하지 말 것
-- **`/fix` 실행 전 Claude Code 종료 권장** — 세션 폴더 이름 변경 중 충돌 방지. 대상 세션 폴더가 이미 존재하는 경우(예: `/fix` 실행 전 새 세션이 시작된 경우), 세션을 자동으로 병합하고 기존 폴더는 그대로 유지합니다. 이후 `/preserve-session:cleanup`(v1.3.0)으로 stale registry 항목과 — 옵션으로 — 남은 세션 폴더까지 정리할 수 있습니다.
-- **디렉토리 이름은 영문(ASCII)만 사용 권장** — Claude Code는 프로젝트 슬러그 계산 시 비ASCII 문자를 모두 `-`로 대체합니다. 구조가 같은 서로 다른 비ASCII 경로(예: 각 경로 세그먼트의 글자 수가 동일한 경우)가 동일한 슬러그를 만들어 세션 파일이 한 폴더에 섞일 수 있습니다. 이는 슬러그 디렉토리 내 세션을 구분 없이 복사/이동하는 `/preserve-session:copy`와 `/preserve-session:move`에 영향을 줍니다. `/preserve-session:doctor`를 실행하면 현재 프로젝트 경로에 비ASCII 문자가 포함되어 있는지 확인할 수 있습니다.
-- **macOS에서 한글 등 비ASCII 경로도 정상 동작** — macOS의 `realpath`는 NFD 방식으로 유니코드를 정규화하지만, Claude Code는 NFC 방식으로 프로젝트 슬러그를 계산합니다. 훅에서 슬러그 계산 전에 NFC로 정규화하여 일치시킵니다.
+- **터미널에서 쓰세요 (VS Code 익스텐션 말고)** — 익스텐션에서는 일부 기능이 안 됩니다. 터미널에서 `claude` 명령으로 실행.
+- **`.claude/hash.txt`를 `.gitignore`에 추가하세요** — 팀 프로젝트에서 이 파일을 공유하면 기록이 섞일 수 있습니다.
+- **`project-registry.json`은 내 컴퓨터 전용** — 백업하거나 다른 기기로 동기화하지 마세요.
+- **`/fix` 실행하는 터미널 외에 다른 Claude Code 세션은 종료 권장** — 동일 프로젝트를 연 다른 세션이 열려 있으면 폴더 이름 바꾸는 도중 충돌 가능. 이미 새 위치에서 별도로 대화를 시작했더라도 플러그인이 자동으로 합쳐줍니다. 남는 옛 폴더는 나중에 `/preserve-session:cleanup`으로 정리 가능.
+
+## 한글/CJK(중국어·일본어)·키릴·아랍어 등 비 ASCII 경로 사용 시
+
+Claude Code는 `[a-zA-Z0-9-]`가 아닌 모든 문자를 `-`로 바꿔서 내부 폴더 이름을 만듭니다. 슬래시(`/`)도 `-`로 바뀌기 때문에 **세그먼트 경계 자체가 사라집니다**. 그 결과:
+
+- 비 ASCII 문자의 **총 개수**와 ASCII 글자 위치가 같으면 서로 다른 경로도 같은 내부 폴더로 매핑됩니다. 예를 들어 `~/외주/app`, `~/개인/app`, `~/仕事/app` 모두 같은 내부 폴더 이름이 됩니다.
+- 세그먼트 순서나 길이가 달라도 총 글자 수가 같으면 여전히 충돌합니다. (예: `~/ㅎㅎ/ㅎㅎㅎ` vs `~/ㅎㅎㅎ/ㅎㅎ` → 같은 결과)
+- 두 프로젝트의 대화 파일이 같은 폴더에 섞여 저장되고, `/resume` picker에도 섞여서 나타납니다.
+
+### 플러그인이 해주는 것
+
+- 세션 시작 시점과 `/preserve-session:doctor`에서 충돌 감지 + 경고
+- 충돌 상황에서 `fix`/`copy`/`move`/`cleanup`이 데이터를 소리 없이 잃지 않도록 차단
+- macOS의 NFD/NFC 표기 차이를 내부에서 맞춰주므로, 한글/CJK 경로가 *다른 이유로* 꼬이지 않게 함
+
+### 플러그인이 해주지 **못하는** 것 (Claude Code 본체 이슈 [#40946](https://github.com/anthropics/claude-code/issues/40946))
+
+- Claude Code가 애초에 두 충돌 프로젝트를 같은 폴더에 쓰는 것 자체는 막을 수 없음
+- 이미 섞여버린 `/resume` 목록의 프로젝트별 분리도 불가
+
+### 업스트림 수정 전까지 대응 방법
+
+- 충돌이 문제되는 프로젝트는 **ASCII 전용 이름** 사용 (가장 확실)
+- 또는 두 프로젝트의 **비 ASCII 문자 총 개수를 다르게**. 세그먼트 순서 바꾸기나 길이만 다르게는 효과 없음 (`/`도 `-`로 바뀌어 세그먼트 경계가 사라지기 때문)
+- 각 비 ASCII 프로젝트에서 `/preserve-session:doctor` 한 번씩 돌려 충돌 여부 확인
+
+같은 slug를 공유하는 다른 프로젝트가 없는 **단일 비 ASCII 프로젝트**는 안전하게 써도 됩니다.
 
 ## 파일
 
 | 파일 | 위치 | 용도 |
 |------|------|------|
-| `hash.txt` | `<project>/.claude/hash.txt` | 프로젝트 고유 UUID |
-| `project-registry.json` | `~/.claude/project-registry.json` | 해시 → 현재 경로 매핑 |
+| `hash.txt` | `<프로젝트>/.claude/hash.txt` | 프로젝트 고유 번호 |
+| `project-registry.json` | `~/.claude/project-registry.json` | 고유 번호 ↔ 현재 경로 매핑 |
 
 ## 라이선스
 
-MIT © 2026 SEONGIL WON. [LICENSE](https://github.com/wonbywondev/claude-plugins/blob/main/LICENSE) 참조.
+MIT © 2026 SEONGIL WON. [LICENSE](https://github.com/wonbywondev/claude-plugins/blob/main/LICENSE)

@@ -8,13 +8,13 @@ wonbywondev의 개인 [Claude Code](https://claude.ai/code) 플러그인 모음.
 
 ### [preserve-session](./plugins/preserve-session/README.ko.md)
 
-프로젝트 디렉토리 이름 변경, 이동, 복사 시에도 Claude Code 세션 히스토리를 보존합니다.
+프로젝트 폴더 이름을 바꾸거나 다른 곳으로 옮겨도 Claude Code 대화 기록이 사라지지 않게 해줍니다.
 
-각 프로젝트에는 경로와 독립적인 UUID가 `.claude/hash.txt`에 저장됩니다. 글로벌 레지스트리가 UUID → 현재 경로를 매핑하고, 디렉토리가 rename 또는 move되면 `/preserve-session:fix`가 내부 세션 폴더 이름을 바꾸고 레지스트리를 갱신하여 이전 세션에 다시 접근할 수 있게 합니다.
+플러그인이 프로젝트마다 고유 번호를 붙여 기억하기 때문에, 폴더를 옮겨도 `/preserve-session:fix` 한 번 실행하면 이전 대화를 다시 볼 수 있습니다.
 
-**커맨드:** `fix` · `copy` · `move` · `cleanup` · `doctor` · `uninstall` &nbsp;·&nbsp; ~~`inherit`~~ _(v1.2.0에서 deprecated — `copy` 또는 `move` 사용)_
+**명령어:** `fix` · `copy` · `move` · `cleanup` · `doctor` · `uninstall` &nbsp;·&nbsp; ~~`inherit`~~ _(v1.2.0부터 사용 중단 — `copy` 또는 `move` 사용)_
 
-**훅:** `SessionStart` — 첫 실행 시 `.claude/hash.txt` 자동 초기화
+첫 실행 시 자동으로 프로젝트를 등록합니다. 별도 설정 불필요.
 
 **설치:**
 

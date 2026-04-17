@@ -8,13 +8,13 @@ Personal [Claude Code](https://claude.ai/code) plugins by wonbywondev.
 
 ### [preserve-session](./plugins/preserve-session)
 
-Preserves Claude Code session history across project directory renames, moves, and copies.
+Keeps your Claude Code conversations alive when you rename, move, or copy your project folder.
 
-Each project gets a path-independent UUID stored in `.claude/hash.txt`. A global registry maps UUID → current path. When a directory is renamed or moved, running `/preserve-session:fix` renames the internal sessions folder and updates the registry, restoring access to all previous sessions.
+The plugin tags each project with a unique ID, so even after you move the folder, running `/preserve-session:fix` once brings your old conversations back.
 
 **Commands:** `fix` · `copy` · `move` · `cleanup` · `doctor` · `uninstall` &nbsp;·&nbsp; ~~`inherit`~~ _(deprecated in v1.2.0 — use `copy` or `move`)_
 
-**Hook:** `SessionStart` — auto-initializes `.claude/hash.txt` on first run
+Auto-registers your project on first run. No configuration needed.
 
 **Install:**
 
