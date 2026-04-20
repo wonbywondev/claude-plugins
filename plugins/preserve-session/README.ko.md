@@ -2,6 +2,10 @@
 
 프로젝트 폴더 이름을 바꾸거나 다른 곳으로 옮겨도 이전 Claude Code 대화가 사라지지 않게 해줍니다.
 
+<!-- upstream-badges-start -->
+**Claude Code 호환성** · Acknowledged `v2.1.114`까지 · Applied `v2.1.112`까지
+<!-- upstream-badges-end -->
+
 ## 데모
 
 https://github.com/user-attachments/assets/05a3dd4b-dfaa-4540-a2f1-e0c2bf6583af

@@ -4,6 +4,10 @@
 
 Keeps your Claude Code conversations alive when you rename, move, or copy your project folder.
 
+<!-- upstream-badges-start -->
+**Claude Code compatibility** · Acknowledged up to `v2.1.114` · Applied up to `v2.1.112`
+<!-- upstream-badges-end -->
+
 ## Demo
 
 https://github.com/user-attachments/assets/05a3dd4b-dfaa-4540-a2f1-e0c2bf6583af
