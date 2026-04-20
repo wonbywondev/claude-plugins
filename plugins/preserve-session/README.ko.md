@@ -3,7 +3,7 @@
 프로젝트 폴더 이름을 바꾸거나 다른 곳으로 옮겨도 이전 Claude Code 대화가 사라지지 않게 해줍니다.
 
 <!-- upstream-badges-start -->
-**Claude Code 호환성** · Acknowledged `v2.1.114`까지 · Applied `v2.1.114`까지
+[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.114-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.114-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
 ## 데모
