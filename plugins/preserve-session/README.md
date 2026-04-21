@@ -5,7 +5,7 @@
 Keeps your Claude Code conversations alive when you rename, move, or copy your project folder.
 
 <!-- upstream-badges-start -->
-[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.114-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.114-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
+[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.116-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.116-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
 ## Demo
