@@ -6,6 +6,8 @@
 [![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.116-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.116-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
+**MIT** · 6개 hermetic 테스트 스크립트 (TDD RED → GREEN) · 한글/CJK 경로 데이터 안전성 보강 ([업스트림 이슈 #40946](https://github.com/anthropics/claude-code/issues/40946))
+
 ## 데모
 
 https://github.com/user-attachments/assets/05a3dd4b-dfaa-4540-a2f1-e0c2bf6583af
@@ -20,8 +22,15 @@ Claude Code는 프로젝트 폴더 위치로 대화 기록을 찾습니다. 그�
 
 ## 설치
 
+**공식 community 마켓플레이스에서** (권장 — Anthropic 관리 mirror):
 ```
-claude marketplace add https://github.com/wonbywondev/claude-plugins
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install preserve-session@claude-community
+```
+
+**이 저장소에서 직접** (항상 최신 커밋):
+```
+claude plugin marketplace add https://github.com/wonbywondev/claude-plugins
 claude plugin install preserve-session
 ```
 

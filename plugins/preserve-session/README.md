@@ -8,6 +8,8 @@ Keeps your Claude Code conversations alive when you rename, move, or copy your p
 [![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.116-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.116-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
+**MIT** · 6 hermetic test scripts (TDD RED → GREEN) · Data-safety hardened for CJK paths ([upstream issue #40946](https://github.com/anthropics/claude-code/issues/40946))
+
 ## Demo
 
 https://github.com/user-attachments/assets/05a3dd4b-dfaa-4540-a2f1-e0c2bf6583af
@@ -22,8 +24,15 @@ Run `/preserve-session:fix` in the new location. The plugin tags each project wi
 
 ## Install
 
+**From the official community marketplace** (recommended — Anthropic-managed mirror):
 ```
-claude marketplace add https://github.com/wonbywondev/claude-plugins
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install preserve-session@claude-community
+```
+
+**From this repository directly** (always the latest commit):
+```
+claude plugin marketplace add https://github.com/wonbywondev/claude-plugins
 claude plugin install preserve-session
 ```
 
