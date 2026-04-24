@@ -4,6 +4,10 @@
 [![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.119-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.119-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
+<!-- release-badges-start -->
+[![latest](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fwonbywondev%2Fclaude-plugins%2Fmain%2Fplugins%2Fpreserve-session%2F.claude-plugin%2Fplugin.json&query=%24.version&label=latest&color=blue&prefix=v)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![community](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fwonbywondev%2Fclaude-upstream-watch%2Fmain%2Fstate%2Fpreserve-session-community-version-badge.json)](https://github.com/anthropics/claude-plugins-community)
+<!-- release-badges-end -->
+
 [![한국어](https://img.shields.io/badge/lang-%ED%95%9C%EA%B5%AD%EC%96%B4-lightgrey)](./README.ko.md)
 
 Keeps your Claude Code conversations alive when you rename, move, or copy your project folder.
