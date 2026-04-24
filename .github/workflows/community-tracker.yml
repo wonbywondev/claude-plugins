@@ -1,0 +1,41 @@
+name: community-tracker
+
+# Tracks anthropics/claude-plugins-community marketplace.json for the
+# preserve-session plugin's pinned SHA. Resolves the SHA to a version and
+# writes a shields.io endpoint JSON so README badges stay in sync. Also
+# sends one ntfy push when the pin moves (deduplicated via state file).
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: community-tracker
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Track community pin & update badge
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: bash .github/scripts/community-tracker.sh
+
+      - name: Commit state if changed
+        run: |
+          git config user.name "community-tracker-bot"
+          git config user.email "community-tracker-bot@users.noreply.github.com"
+          git add .github/state/preserve-session-sha.json .github/state/preserve-session-community-version.json
+          if git diff --cached --quiet; then
+            echo "no state change"
+            exit 0
+          fi
+          git commit -m "chore: update community tracker state"
+          git push
