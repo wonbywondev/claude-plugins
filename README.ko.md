@@ -1,6 +1,6 @@
 # claude-plugins
 
-[English](./README.md)
+[![English](https://img.shields.io/badge/lang-English-lightgrey)](./README.md)
 
 wonbywondev의 개인 [Claude Code](https://claude.ai/code) 플러그인 모음.
 

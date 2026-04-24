@@ -1,12 +1,12 @@
 # preserve-session
 
-프로젝트 폴더 이름을 바꾸거나 다른 곳으로 옮겨도 이전 Claude Code 대화가 사라지지 않게 해줍니다.
-
 <!-- upstream-badges-start -->
-[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.116-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.116-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
+[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.119-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.119-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
-**MIT** · 6개 hermetic 테스트 스크립트 (TDD RED → GREEN) · 한글/CJK 경로 데이터 안전성 보강 ([업스트림 이슈 #40946](https://github.com/anthropics/claude-code/issues/40946))
+[![English](https://img.shields.io/badge/lang-English-lightgrey)](./README.md)
+
+프로젝트 폴더 이름을 바꾸거나 다른 곳으로 옮겨도 이전 Claude Code 대화가 사라지지 않게 해줍니다.
 
 ## 데모
 

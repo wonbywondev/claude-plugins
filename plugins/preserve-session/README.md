@@ -1,14 +1,12 @@
 # preserve-session
 
-[한국어](./README.ko.md)
-
-Keeps your Claude Code conversations alive when you rename, move, or copy your project folder.
-
 <!-- upstream-badges-start -->
-[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.116-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.116-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
+[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.119-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.119-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
-**MIT** · 6 hermetic test scripts (TDD RED → GREEN) · Data-safety hardened for CJK paths ([upstream issue #40946](https://github.com/anthropics/claude-code/issues/40946))
+[![한국어](https://img.shields.io/badge/lang-%ED%95%9C%EA%B5%AD%EC%96%B4-lightgrey)](./README.ko.md)
+
+Keeps your Claude Code conversations alive when you rename, move, or copy your project folder.
 
 ## Demo
 
