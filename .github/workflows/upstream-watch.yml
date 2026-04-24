@@ -1,8 +1,8 @@
 name: upstream-watch
 
-# Fetches Anthropic Claude Code release notes and writes one markdown file
-# per release into upstream-updates/ with YAML frontmatter for lifecycle
-# tracking (acknowledged / applied / impact / notes).
+# Maintains .github/state/claude-code-releases.json — a single JSON index of
+# Anthropic Claude Code releases, used by each plugin's upstream-check hook
+# to detect unreviewed releases.
 
 on:
   schedule:
@@ -28,15 +28,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash .github/scripts/fetch-new-releases.sh
 
-      - name: Commit and push if files changed
+      - name: Commit and push if index changed
         run: |
           git config user.name "upstream-watch-bot"
           git config user.email "upstream-watch-bot@users.noreply.github.com"
-          git add upstream-updates/
+          git add .github/state/claude-code-releases.json
           if git diff --cached --quiet; then
             echo "no changes"
             exit 0
           fi
-          NEW_FILES=$(git diff --cached --name-only --diff-filter=A upstream-updates/ | sed 's|upstream-updates/||' | tr '\n' ' ')
-          git commit -m "chore: add $NEW_FILES"
+          git commit -m "chore: update claude-code-releases index"
           git push

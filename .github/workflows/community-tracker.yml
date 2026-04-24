@@ -1,9 +1,10 @@
 name: community-tracker
 
-# Tracks anthropics/claude-plugins-community marketplace.json for the
-# preserve-session plugin's pinned SHA. Resolves the SHA to a version and
-# writes a shields.io endpoint JSON so README badges stay in sync. Also
-# sends one ntfy push when the pin moves (deduplicated via state file).
+# Tracks every plugin hosted in this repo that is listed in
+# anthropics/claude-plugins-community marketplace. Per plugin:
+#   - Resolves community-pinned SHA → plugin version
+#   - Writes shields.io endpoint JSON for README badges
+#   - Sends one ntfy push when the pin moves (deduplicated via state file)
 
 on:
   schedule:
@@ -23,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Track community pin & update badge
+      - name: Track community pins & update badges
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: bash .github/scripts/community-tracker.sh
@@ -32,7 +33,23 @@ jobs:
         run: |
           git config user.name "community-tracker-bot"
           git config user.email "community-tracker-bot@users.noreply.github.com"
-          git add .github/state/preserve-session-sha.json .github/state/preserve-session-community-version.json
+          # Add all per-plugin state files matching the naming convention
+          shopt -s nullglob
+          FILES=( .github/state/*-sha.json .github/state/*-community-version.json )
+          # Exclude the shared claude-code-releases.json (handled by upstream-watch)
+          ADD=()
+          for f in "${FILES[@]}"; do
+            base=$(basename "$f")
+            if [[ "$base" == "claude-code-releases.json" ]]; then
+              continue
+            fi
+            ADD+=( "$f" )
+          done
+          if [[ ${#ADD[@]} -eq 0 ]]; then
+            echo "no tracker state files to commit"
+            exit 0
+          fi
+          git add "${ADD[@]}"
           if git diff --cached --quiet; then
             echo "no state change"
             exit 0

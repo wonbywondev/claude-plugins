@@ -21,4 +21,3 @@
 # Personal dev workflow (upstream-watch integration) — not part of plugin distribution
 **/.claude/hooks/upstream-check.sh
 **/.claude/settings.json
-**/upstream.md
