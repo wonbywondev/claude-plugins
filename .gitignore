@@ -12,8 +12,17 @@
 **/.cache/
 
 # Local-only dev files (not published to marketplace)
-/CLAUDE.md
+**/CLAUDE.md
+**/INTEGRATION_NOTES.md
 /scripts/
+
+# macOS noise
+.DS_Store
+**/.DS_Store
+
+# Local demo media (uploaded to GitHub user-attachments instead)
+**/demo.mov
+**/demo.mp4
 
 # sync-to-fork local meta
 **/.syncignore
