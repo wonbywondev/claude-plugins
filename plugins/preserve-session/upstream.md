@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.119
-plugin_applied: v2.1.119
-updated_at: 2026-04-24
+plugin_ack: v2.1.128
+plugin_applied: v2.1.128
+updated_at: 2026-05-06
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -22,6 +22,43 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 _비어 있음._
 
 ## ✅ Applied
+
+<details><summary>v2.1.128 (2026-05-04) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.128
+**Impact**: none — MCP `workspace` 예약 이름, EnterWorktree 본 동작 픽스, `--plugin-dir` zip archive 지원, `/plugin update` npm-source 픽스 등 모두 플러그인 scope 밖. 우리는 git-source 플러그인이라 npm 관련 변경 무관. installed_plugins.json stale 엔트리 PATH 오염 픽스도 사용자 측 hygiene이라 우리 동작에 영향 없음.
+
+</details>
+
+<details><summary>v2.1.126 (2026-05-01) — no-op apply (impact: none, 운영 노트 1건)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.126
+**Impact**: none — `claude project purge [path]` 신규 명령이 transcripts/tasks/file history/config entry를 삭제하는데, preserve-session의 `~/.claude/project-registry.json` 엔트리와 `<project>/.claude/hash.txt`는 Claude Code 데이터가 아니라서 purge 대상 아님. 결과적으로 stale 레지스트리 엔트리가 남을 수 있는데, 이건 `/preserve-session:cleanup` + `doctor`가 이미 처리하는 케이스와 동일. Windows CJK 렌더 픽스는 표시 개선만, slug 알고리즘 무관. `--dangerously-skip-permissions` 보호 경로 완화도 사용자 모드, 플러그인 동작 변경 없음.
+
+**운영 노트**: 향후 README/cleanup 문서에 "claude project purge 후 stale 레지스트리는 /preserve-session:cleanup으로" 안내 추가 검토 가능. 코드 변경 불필요.
+
+</details>
+
+<details><summary>v2.1.123 (2026-04-29) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.123
+**Impact**: none — OAuth 401 retry 루프 픽스 한 줄. 플러그인 무관.
+
+</details>
+
+<details><summary>v2.1.122 (2026-04-28) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.122
+**Impact**: none — `/branch` 픽스, Vertex/Bedrock 픽스, ToolSearch 픽스 등 모두 플러그인 scope 밖. settings.json malformed-hooks 격리 픽스는 사용자가 settings.json에 직접 작성한 훅에만 적용 — 우리 훅은 플러그인 manifest로 로드되므로 무관.
+
+</details>
+
+<details><summary>v2.1.121 (2026-04-28) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.121
+**Impact**: none — PostToolUse 훅에 `updatedToolOutput` 출력 추가는 플러그인이 SessionStart만 사용해서 무관. `claude plugin prune` 신규 (의존성 0이라 무관). `--resume` 관련 픽스 다수는 Claude Code 내부 처리, 우리 슬러그/레지스트리 미변경. "Bash tool becoming permanently unusable when the directory ... is deleted or moved mid-session" 픽스는 우리 도메인(폴더 rename)과 인접해 보이지만 Bash tool UX 픽스이지 session file 처리 변경 아님.
+
+</details>
 
 <details><summary>v2.1.119 (2026-04-23) — no-op apply (impact: none)</summary>
 
