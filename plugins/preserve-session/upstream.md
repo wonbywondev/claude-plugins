@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.128
-plugin_applied: v2.1.128
-updated_at: 2026-05-06
+plugin_ack: v2.1.138
+plugin_applied: v2.1.138
+updated_at: 2026-05-11
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -22,6 +22,57 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 _비어 있음._
 
 ## ✅ Applied
+
+<details><summary>v2.1.138 (2026-05-09) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.138
+**Impact**: none — release note 한 줄("Internal fixes"). 외부 사용자에게 영향 없는 내부 안정화로 추정.
+
+</details>
+
+<details><summary>v2.1.137 (2026-05-09) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.137
+**Impact**: none — VS Code 익스텐션 Windows 활성화 픽스. 우리 플러그인 무관.
+
+</details>
+
+<details><summary>v2.1.136 (2026-05-08) — no-op apply (impact: none, 검증 1건)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.136
+**Impact**: none — 가장 의심스러운 항목 "Fixed --resume / --continue not finding sessions when the project path contains underscores"가 슬러그 알고리즘 변경인지 검증. 사용자 머신의 슬러그 폴더 forensic 결과: Claude Code 본체와 preserve-session `path_to_slug` 둘 다 `_`→`-` 변환 일관 적용 중. 즉 v2.1.136 fix는 검색(lookup) 로직 픽스일 뿐 인코딩 자체는 미변경. 우리 슬러그 산출과 Claude Code 슬러그 폴더 이름 일치 확인 (예: `-Users-won-dev-00-projects-claude-plugins-plugins-preserve-session`). 나머지 항목(MCP refresh token race, plan mode Edit allow rule, plugin Stop/UserPromptSubmit hook 캐시 클린업 등) 모두 우리 SessionStart-only 플러그인 scope 밖.
+
+**참고**: 사용자 머신에 `-Users-won-dev-00_projects-tattoo-ar` (underscore preserved) 슬러그가 1건 있는데, 이는 별개 툴이 만든 것으로 추정 — psh4607이 issue #40946 5/05 코멘트에서 언급한 "encoding split across the ecosystem" 케이스로 정합. preserve-session 동작 변경과 무관.
+
+</details>
+
+<details><summary>v2.1.133 (2026-05-07) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.133
+**Impact**: none — hooks가 `effort.level` JSON 입력 + `$CLAUDE_EFFORT` env로 effort 정보 받게 됨. 우리 SessionStart 훅은 이 정보 안 쓰지만 **장기 활용 가능** (예: high effort 시 verbose registry health check). 코드 변경 불필요. worktree.baseRef 설정, sandbox.bwrapPath 등 모두 외부.
+
+</details>
+
+<details><summary>v2.1.132 (2026-05-06) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.132
+**Impact**: none — `CLAUDE_CODE_SESSION_ID` 가 Bash 툴 subprocess env에 추가됐는데 우리 훅은 Bash 툴 안 쓰고 직접 shell out (자체 env). vim operators NFD 손상 픽스는 입력 vim mode 처리 픽스로 우리 NFC slug 정규화와 무관 (도메인 다름 — 입력 텍스트 편집 vs 경로 인코딩). Indic conjunct cursor 핸들링도 입력 UI 픽스. 나머지 다수 픽스 모두 외부.
+
+</details>
+
+<details><summary>v2.1.131 (2026-05-06) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.131
+**Impact**: none — VS Code 익스텐션 Windows 활성화 픽스 + Mantle endpoint auth 픽스. 우리 무관.
+
+</details>
+
+<details><summary>v2.1.129 (2026-05-06) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.129
+**Impact**: none — 플러그인 manifest의 `themes`/`monitors` 필드가 `experimental:{}` 아래로 권고됨. preserve-session은 둘 다 안 씀. `Bash(mkdir *)`/`Bash(touch *)` allow rule 픽스, gateway model discovery opt-in, Ctrl+R history picker 동작 변경, OAuth refresh race 픽스 등 모두 외부. 1-hour prompt cache TTL fix, `/context` rendered ASCII 토큰 낭비 픽스, 다수 UI/UX fix.
+
+</details>
 
 <details><summary>v2.1.128 (2026-05-04) — no-op apply (impact: none)</summary>
 
