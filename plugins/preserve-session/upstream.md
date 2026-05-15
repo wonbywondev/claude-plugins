@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.138
-plugin_applied: v2.1.138
-updated_at: 2026-05-11
+plugin_ack: v2.1.142
+plugin_applied: v2.1.142
+updated_at: 2026-05-15
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -22,6 +22,34 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 _비어 있음._
 
 ## ✅ Applied
+
+<details><summary>v2.1.142 (2026-05-14) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.142
+**Impact**: none — Fast mode가 Opus 4.7 default로 변경 (CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1 로 옛 모드 유지 가능). 플러그인 root-level `SKILL.md` 자동 인식 (우리는 SKILL.md 없음). `/plugin` browse pane 0 installs 표시 픽스, plugin advisory 픽스 등 모두 우리 무관. SessionStart/Setup/SubagentStart 훅에 prompt/agent type 사용 시 명확한 에러 메시지 추가 — 우리는 SessionStart에 정확히 `type: "command"` 사용해서 무관.
+
+</details>
+
+<details><summary>v2.1.141 (2026-05-13) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.141
+**Impact**: none — `terminalSequence` 신규 hook output 필드 (우리 미사용, 향후 notification에 활용 가능). `CLAUDE_CODE_PLUGIN_PREFER_HTTPS`/`ANTHROPIC_WORKSPACE_ID` env vars 추가. `EnterWorktree` 후 hooks transcript_path 누락 픽스 (우리 SessionStart 훅은 transcript_path 안 씀). MCP/Remote Control 다수 픽스, UI/UX 픽스 다수 — 모두 외부.
+
+</details>
+
+<details><summary>v2.1.140 (2026-05-12) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.140
+**Impact**: none — Agent tool subagent_type case/separator-insensitive 매칭, `/goal` disableAllHooks 시 hang 픽스, symlinked settings.json regression 픽스 등 외부. **확인됨**: 플러그인 default component folder 가리는 키 경고 신규 — 우리 `plugin.json`은 `commands`/`hooks`/`skills` 어느 키도 선언 안 함 (모두 default 디렉토리 자동 탐색). 경고 안 뜸.
+
+</details>
+
+<details><summary>v2.1.139 (2026-05-11) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.139
+**Impact**: none — 대형 release. `claude agents` view (Research Preview), `/goal` 신규, `claude plugin details`, transcript view navigation 등 신기능. 훅 관련 변경 3건: (1) `args: string[]` exec form 신규 (옵션, 우리는 standard `command` string 사용), (2) PostToolUse용 `continueOnBlock` config (우리는 PostToolUse 안 씀), (3) MCP stdio에 `CLAUDE_PROJECT_DIR` env 추가 (우리 MCP 없음). **확인됨**: "hooks now run without terminal access" — 우리 훅은 직접 TTY 미사용, stdout/stderr만 사용 (Claude Code가 캡처). 무관. 나머지 다수 픽스 모두 우리 scope 밖.
+
+</details>
 
 <details><summary>v2.1.138 (2026-05-09) — no-op apply (impact: none)</summary>
 
