@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.142
-plugin_applied: v2.1.142
-updated_at: 2026-05-15
+plugin_ack: v2.1.146
+plugin_applied: v2.1.146
+updated_at: 2026-05-22
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -22,6 +22,34 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 _비어 있음._
 
 ## ✅ Applied
+
+<details><summary>v2.1.146 (2026-05-21) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.146
+**Impact**: none — built-in `/simplify` → `/code-review` 리네임은 우리 커맨드(`cleanup`/`copy`/`doctor`/`fix`/`inherit`/`move`/`uninstall`)와 이름 충돌 없음. Auto mode의 AskUserQuestion 처리, `CLAUDE_CODE_SUBAGENT_MODEL` 전파 픽스, Windows PowerShell/MCP pagination/터미널 렌더/auto-updater 픽스 등 모두 SessionStart-only 플러그인 scope 밖. **실증**: 이 릴리스(2.1.146)에서 SessionStart 훅 정상 시작 확인.
+
+</details>
+
+<details><summary>v2.1.145 (2026-05-19) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.145
+**Impact**: none — Stop/SubagentStop 훅 입력에 `background_tasks`/`session_crons` 필드 추가 — 우리는 SessionStart 단독이라 무관. "bare env 변수 할당 권한 우회 픽스"는 Bash *툴* 권한 시스템 픽스 — 플러그인 훅은 Claude Code가 직접 실행하며 권한 시스템을 거치지 않음, 무관. `claude plugin validate`의 `skills:` 파일/디렉토리 검증 강화 — 우리 `plugin.json`은 `skills` 키 자체를 선언 안 함(default 디렉토리 탐색). **확인됨**: `claude plugin validate` 결과 `✔ Validation passed` — 단 plugin root `CLAUDE.md`가 project context로 로드 안 된다는 권고 경고 1건. 이는 개발용 로컬 파일(페르소나·compass 지침)로 의도된 상태이며 동작 충돌 아님.
+
+</details>
+
+<details><summary>v2.1.144 (2026-05-19) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.144
+**Impact**: none — "session title이 plugin monitor output에서 생성되던 버그 픽스" — preserve-session은 monitor 미사용 + `common.sh`의 모든 출력이 stderr(`>&2`)이고 SessionStart 훅은 성공 시 조용히 `exit 0`, stdout 출력 0건이라 무관. "build가 skill 디렉토리 안에서 돌 때 fd 고갈 픽스" — 우리는 skills 없음. `/resume` background sessions, `/model` per-session, plugin 캐시 hint, MCP/터미널 픽스 다수 모두 외부.
+
+</details>
+
+<details><summary>v2.1.143 (2026-05-15) — no-op apply (impact: none)</summary>
+
+**Source**: https://github.com/anthropics/claude-code/releases/tag/v2.1.143
+**Impact**: none — "stop 훅이 반복 차단 시 8회 후 종료(`CLAUDE_CODE_STOP_HOOK_BLOCK_CAP`)" — 우리는 Stop 훅 안 쓰고 SessionStart 단독이라 무관. "plugin dependency enforcement (`claude plugin disable/enable` 의존성 체인)" — preserve-session은 의존성 0이라 무관. `--agent <name>` plugin-contributed agent 매칭 픽스 — 우리는 agents 없음. `worktree.bgIsolation`, PowerShell, background session 다수 픽스 모두 외부.
+
+</details>
 
 <details><summary>v2.1.142 (2026-05-14) — no-op apply (impact: none)</summary>
 
