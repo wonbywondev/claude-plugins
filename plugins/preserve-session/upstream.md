@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.146
-plugin_applied: v2.1.146
-updated_at: 2026-05-22
+plugin_ack: v2.1.156
+plugin_applied: v2.1.156
+updated_at: 2026-05-29
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -22,6 +22,39 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 _비어 있음._
 
 ## ✅ Applied
+
+<details><summary>v2.1.147~156 (2026-05-21~29) — no-op apply (impact: none)</summary>
+
+**Sources**: [147](https://github.com/anthropics/claude-code/releases/tag/v2.1.147) · [148](https://github.com/anthropics/claude-code/releases/tag/v2.1.148) · [149](https://github.com/anthropics/claude-code/releases/tag/v2.1.149) · [150](https://github.com/anthropics/claude-code/releases/tag/v2.1.150) · [152](https://github.com/anthropics/claude-code/releases/tag/v2.1.152) · [153](https://github.com/anthropics/claude-code/releases/tag/v2.1.153) · [154](https://github.com/anthropics/claude-code/releases/tag/v2.1.154) · [156](https://github.com/anthropics/claude-code/releases/tag/v2.1.156)
+(v2.1.151, v2.1.155는 release not found — yank/skip 추정, N/A)
+
+**핵심 검토 (SessionStart-only 플러그인 관점)**:
+
+- **v2.1.152 — SessionStart 훅 신규 기능 3건** (전부 opt-in, 우리 미사용 → 무관):
+  - `SessionStart` 훅이 `hookSpecificOutput.sessionTitle`로 세션 타이틀 지정 가능 → 우리 훅은 성공 시 stdout 출력 0건(`exit 0`)이라 타이틀 미설정. (v2.1.144 "title이 monitor output에서 생성되던 버그" 픽스와 동일 맥락, 영향 없음 재확인.)
+  - `SessionStart` 훅이 `reloadSkills: true` 반환 가능 → 우리는 skills 없음.
+  - `MessageDisplay` 신규 훅 이벤트 → 미사용.
+  - "git branch 추적 플러그인이 registry 재빌드 후 업데이트 못 받던 버그" 픽스 → preserve-session은 git-source라 **우리에게 유리한 픽스** (업데이트 정상화).
+
+- **v2.1.147 — `/simplify` → `/code-review` 리네임 + cleanup 동작 제거**: 우리 커맨드(`cleanup`/`copy`/`doctor`/`fix`/`inherit`/`move`/`uninstall`)와 이름 충돌 없음. "shell snapshot이 `_`로 시작하는 함수 누락 픽스" → `common.sh` 함수(`find_python`/`path_to_slug`/`uuidgen_cross`/`nfc_normalize`/`registry_write`/`check_slug_collision`) 어느 것도 `_`로 시작 안 함, 무관. "plugin component count 중복 집계 픽스(manifest 경로가 default 디렉토리와 겹칠 때)" → 우리 `plugin.json`은 경로 키 미선언, 무관.
+
+- **v2.1.148 — Bash 툴 exit 127 regression 픽스**: Agent의 Bash *툴* 버그이지 플러그인 훅 실행 경로 아님. 이 세션이 2.1.156에서 정상 시작된 것으로 훅 실행 정상 실증.
+
+- **v2.1.149 — PowerShell 권한 우회 + `find` vnode 고갈 픽스**: PowerShell은 Windows 전용, `find`는 Bash 툴 — 둘 다 우리 SessionStart 훅 무관.
+
+- **v2.1.150 — Internal only** / **v2.1.156 — Opus 4.8 thinking block API 에러 픽스**: 무관.
+
+- **v2.1.153 — `--strict-mcp-config`/subagent MCP, npm update 채널, transcript 경로 resume 메모리 픽스 등**: 우리 MCP/subagent 미사용, slug/registry 로직 무관. "transcript file path로 resume 시 메모리 과다" 픽스는 Claude Code 내부 resume 처리 — 우리 path→slug 산출과 별개.
+
+- **v2.1.154 — Opus 4.8, dynamic workflows, lean system prompt default**: 모델/기능 추가, 훅 무관. "`rm -rf $HOME` trailing slash 미차단 픽스"는 Bash 툴 dangerous-path 탐지 — `uninstall.sh`는 훅이 아닌 사용자 명시 실행 커맨드라 무관. "Plugins `defaultEnabled: false` 선언 가능" → opt-in, 우리 미선언.
+
+**실증 (2.1.156)**:
+- `claude plugin validate` → `✔ Validation passed` (경고 1건: plugin root `CLAUDE.md` project context 미로드 — 개발용 로컬 파일, v2.1.145부터 뜨는 권고, 동작 충돌 아님).
+- SessionStart 훅 정상 작동: `hash.txt` → `~/.claude/project-registry.json` 매핑 정확 등록 확인 (`a756f2a8...` → 현재 경로).
+
+**결론**: 코드 변경 불필요.
+
+</details>
 
 <details><summary>v2.1.146 (2026-05-21) — no-op apply (impact: none)</summary>
 
