@@ -1,7 +1,7 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.169
-plugin_applied: v2.1.169
+plugin_ack: v2.1.170
+plugin_applied: v2.1.170
 updated_at: 2026-06-10
 ---
 
@@ -23,9 +23,9 @@ _비어 있음._
 
 ## ✅ Applied
 
-<details><summary>v2.1.157~169 (2026-05-29~06-08) — no-op apply (impact: none)</summary>
+<details><summary>v2.1.157~170 (2026-05-29~06-09) — no-op apply (impact: none)</summary>
 
-**Sources**: [157](https://github.com/anthropics/claude-code/releases/tag/v2.1.157) · [158](https://github.com/anthropics/claude-code/releases/tag/v2.1.158) · [159](https://github.com/anthropics/claude-code/releases/tag/v2.1.159) · [160](https://github.com/anthropics/claude-code/releases/tag/v2.1.160) · [161](https://github.com/anthropics/claude-code/releases/tag/v2.1.161) · [162](https://github.com/anthropics/claude-code/releases/tag/v2.1.162) · [163](https://github.com/anthropics/claude-code/releases/tag/v2.1.163) · [165](https://github.com/anthropics/claude-code/releases/tag/v2.1.165) · [166](https://github.com/anthropics/claude-code/releases/tag/v2.1.166) · [167](https://github.com/anthropics/claude-code/releases/tag/v2.1.167) · [168](https://github.com/anthropics/claude-code/releases/tag/v2.1.168) · [169](https://github.com/anthropics/claude-code/releases/tag/v2.1.169)
+**Sources**: [157](https://github.com/anthropics/claude-code/releases/tag/v2.1.157) · [158](https://github.com/anthropics/claude-code/releases/tag/v2.1.158) · [159](https://github.com/anthropics/claude-code/releases/tag/v2.1.159) · [160](https://github.com/anthropics/claude-code/releases/tag/v2.1.160) · [161](https://github.com/anthropics/claude-code/releases/tag/v2.1.161) · [162](https://github.com/anthropics/claude-code/releases/tag/v2.1.162) · [163](https://github.com/anthropics/claude-code/releases/tag/v2.1.163) · [165](https://github.com/anthropics/claude-code/releases/tag/v2.1.165) · [166](https://github.com/anthropics/claude-code/releases/tag/v2.1.166) · [167](https://github.com/anthropics/claude-code/releases/tag/v2.1.167) · [168](https://github.com/anthropics/claude-code/releases/tag/v2.1.168) · [169](https://github.com/anthropics/claude-code/releases/tag/v2.1.169) · [170](https://github.com/anthropics/claude-code/releases/tag/v2.1.170)
 (v2.1.164는 release not found — yank/skip 추정, N/A)
 
 **핵심 검토 (SessionStart-only + 7개 커맨드 플러그인 관점)**:
@@ -33,6 +33,8 @@ _비어 있음._
 - **v2.1.161 — "Windows hooks that invoke bash explicitly (`/usr/bin/bash script.sh`) failing with command not found" 픽스**: 우리 SessionStart 훅이 정확히 `bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh` 형식(`hooks.json`) → **우리에게 유리한 안정화 픽스** (Windows 사용자). 코드 변경 불필요, 오히려 신뢰성 향상.
 
 - **v2.1.163 — 훅 관련 3건 전부 무관**: (1) Stop·SubagentStop 훅의 `hookSpecificOutput.additionalContext` → 우리는 SessionStart 단독. (2) `if: "Bash(...)"` 훅 조건이 `$()`/`$VAR` 포함 커맨드마다 오발화하던 픽스 → 우리 `hooks.json`은 `if:` 조건 없음. (3) stdio MCP에 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 전달 → MCP 미사용.
+
+- **v2.1.170 — transcript 저장 픽스 (인접 도메인, 우리에게 유리)**: "VS Code integrated terminal 또는 Claude Code 환경변수를 상속한 셸에서 launch 시 세션 transcript가 저장 안 되고 `--resume`에 안 뜨던 버그" 픽스. 이건 본체의 transcript `.jsonl` 저장 로직 픽스이지 slug/registry 산출 변경이 아님. preserve-session은 그 위에서 세션 *폴더*를 옮기는 도구라, transcript가 정상 저장되면 preserve 대상이 온전해져 **유리한 픽스**. 트리거("CC env 상속 셸에서 launch")는 새 `claude` 세션 실행 경로 — 우리 훅(`bash session-start.sh`)·커맨드(Bash 툴 서브프로세스)는 세션 spawn이 아니라 무관. 우리 README 경고는 VS Code *확장(extension)* 대상이고 이 픽스는 *통합 터미널*(CLI claude) 대상이라 별개 표면 — README 변경 불필요. (첫 항목 "Claude Fable 5" 신규 모델은 플러그인 무관.)
 
 - **v2.1.169 — `/cd` 신규 (세션 중 작업 디렉토리 이동)**: 우리 도메인(폴더 rename/move)과 인접하나, `/cd`는 prompt cache 안 깨고 cwd만 변경하는 명령이지 transcript slug 폴더를 옮기는 게 아님 → slug/registry 산출 무관, 코드 영향 없음. **Forward-note**: 사용자가 `/cd`로 다른 프로젝트 경로로 이동 시 그 경로가 미등록이면 SessionStart 훅이 이미 새 세션에서 등록을 처리하므로 별도 대응 불필요. 동작 변경 발생 시 재검토.
 

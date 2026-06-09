@@ -1,7 +1,7 @@
 # preserve-session
 
 <!-- upstream-badges-start -->
-[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.169-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.169-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
+[![Claude Code](https://img.shields.io/github/v/release/anthropics/claude-code?label=claude-code&color=blue)](https://github.com/anthropics/claude-code/releases) [![Acknowledged](https://img.shields.io/badge/acknowledged-v2.1.170-green)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session) [![Applied](https://img.shields.io/badge/applied-v2.1.170-brightgreen)](https://github.com/wonbywondev/claude-plugins/tree/main/plugins/preserve-session)
 <!-- upstream-badges-end -->
 
 <!-- release-badges-start -->
