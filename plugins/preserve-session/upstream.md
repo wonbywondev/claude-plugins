@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.156
-plugin_applied: v2.1.156
-updated_at: 2026-05-29
+plugin_ack: v2.1.169
+plugin_applied: v2.1.169
+updated_at: 2026-06-10
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -22,6 +22,35 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 _비어 있음._
 
 ## ✅ Applied
+
+<details><summary>v2.1.157~169 (2026-05-29~06-08) — no-op apply (impact: none)</summary>
+
+**Sources**: [157](https://github.com/anthropics/claude-code/releases/tag/v2.1.157) · [158](https://github.com/anthropics/claude-code/releases/tag/v2.1.158) · [159](https://github.com/anthropics/claude-code/releases/tag/v2.1.159) · [160](https://github.com/anthropics/claude-code/releases/tag/v2.1.160) · [161](https://github.com/anthropics/claude-code/releases/tag/v2.1.161) · [162](https://github.com/anthropics/claude-code/releases/tag/v2.1.162) · [163](https://github.com/anthropics/claude-code/releases/tag/v2.1.163) · [165](https://github.com/anthropics/claude-code/releases/tag/v2.1.165) · [166](https://github.com/anthropics/claude-code/releases/tag/v2.1.166) · [167](https://github.com/anthropics/claude-code/releases/tag/v2.1.167) · [168](https://github.com/anthropics/claude-code/releases/tag/v2.1.168) · [169](https://github.com/anthropics/claude-code/releases/tag/v2.1.169)
+(v2.1.164는 release not found — yank/skip 추정, N/A)
+
+**핵심 검토 (SessionStart-only + 7개 커맨드 플러그인 관점)**:
+
+- **v2.1.161 — "Windows hooks that invoke bash explicitly (`/usr/bin/bash script.sh`) failing with command not found" 픽스**: 우리 SessionStart 훅이 정확히 `bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh` 형식(`hooks.json`) → **우리에게 유리한 안정화 픽스** (Windows 사용자). 코드 변경 불필요, 오히려 신뢰성 향상.
+
+- **v2.1.163 — 훅 관련 3건 전부 무관**: (1) Stop·SubagentStop 훅의 `hookSpecificOutput.additionalContext` → 우리는 SessionStart 단독. (2) `if: "Bash(...)"` 훅 조건이 `$()`/`$VAR` 포함 커맨드마다 오발화하던 픽스 → 우리 `hooks.json`은 `if:` 조건 없음. (3) stdio MCP에 `--resume` 시 `CLAUDE_CODE_SESSION_ID` 전달 → MCP 미사용.
+
+- **v2.1.169 — `/cd` 신규 (세션 중 작업 디렉토리 이동)**: 우리 도메인(폴더 rename/move)과 인접하나, `/cd`는 prompt cache 안 깨고 cwd만 변경하는 명령이지 transcript slug 폴더를 옮기는 게 아님 → slug/registry 산출 무관, 코드 영향 없음. **Forward-note**: 사용자가 `/cd`로 다른 프로젝트 경로로 이동 시 그 경로가 미등록이면 SessionStart 훅이 이미 새 세션에서 등록을 처리하므로 별도 대응 불필요. 동작 변경 발생 시 재검토.
+
+- **v2.1.169 — `--safe-mode` (`CLAUDE_CODE_SAFE_MODE`)**: 모든 customization(CLAUDE.md/plugins/skills/hooks/MCP) 비활성 troubleshooting 모드. 설계상 의도된 동작 — safe mode에선 우리 훅도 안 도는 게 정상. **Forward-note**: doctor 안내문에 "세션이 안 잡히면 `--safe-mode`로 켠 건 아닌지 확인" 추가 검토 가능. 코드 변경 불필요.
+
+- **v2.1.160/162/166 — 권한·파일쓰기 보안 강화 다수**: shell startup file(`.zshenv` 등) 쓰기 prompt, `acceptEdits` build-tool config prompt, Windows 백슬래시 permission rule 매칭, glob deny rule 등 — 전부 Edit/Write 툴 + permission 시스템. 플러그인 manifest로 로드되는 훅은 권한 시스템 우회하므로 무관. 우리 커맨드는 Bash 툴 경유 셸 실행이지만 startup file/build config를 쓰지 않음.
+
+- **v2.1.157 — 대형 릴리스**: "Plugins in `.claude/skills` auto-load", `claude plugin init`, agents/worktree/UI 픽스 다수 — 우리 커맨드/훅/slug 경로 무관. 워크플로우 트리거 키워드 설정도 무관.
+
+- **v2.1.158/159/165/167/168 — 무관**: Bedrock/Vertex auto mode, internal-only, "bug fixes and reliability improvements"(상세 없음).
+
+**실증**: 이 세션이 최신 릴리스 라인에서 정상 시작 — SessionStart 훅 정상 발동, `hash.txt` → `~/.claude/project-registry.json` 매핑 등록 동작 확인.
+
+**결론**: 코드 변경 불필요. ack/applied → v2.1.169 전진.
+
+**참고**: 릴리스 인덱스(`.github/state/claude-code-releases.json`)는 CI(`upstream-watch.yml`) 정상 동작 중 — `last_updated: 2026-06-09`, top tag v2.1.169까지 최신. (작업 시작 시 로컬 복사본이 origin보다 뒤처져 v2.1.156으로 보였을 뿐. rebase 후 최신 확인.) 이번 sweep의 릴리스 노트 정독은 `gh api` 직접 조회로 수행.
+
+</details>
 
 <details><summary>v2.1.147~156 (2026-05-21~29) — no-op apply (impact: none)</summary>
 
