@@ -1,0 +1,16 @@
+{
+  "description": "call-it-a-day: greeting bounds a workday, nudges live knowledge capture, and triggers the wrap-up.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/user-prompt-submit.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

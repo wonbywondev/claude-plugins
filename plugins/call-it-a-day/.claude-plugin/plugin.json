@@ -1,0 +1,10 @@
+{
+  "name": "call-it-a-day",
+  "version": "0.1.0",
+  "description": "Greet to bound a workday; on wrap-up summarize the day into Obsidian (per-project daily log + knowledge notes) and gate compass freshness. Live-captures insights, new libraries, and console/CLI rules to the vault as they happen.",
+  "author": { "name": "won", "email": "wonbywondev@gmail.com" },
+  "homepage": "https://github.com/wonbywondev/claude-plugins/tree/main/plugins/call-it-a-day",
+  "repository": "https://github.com/wonbywondev/claude-plugins",
+  "license": "MIT",
+  "keywords": ["daily-log", "obsidian", "knowledge-capture", "compass", "wrap-up"]
+}
