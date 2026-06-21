@@ -25,9 +25,9 @@ claude plugin install preserve-session
 
 See [plugins/preserve-session/README.md](./plugins/preserve-session/README.md) for details, demo, and workflows.
 
-### [skill-curator](./plugins/skill-curator)
+### [skill-manager](./plugins/skill-manager)
 
-_(In development)_ Auto-classifies skills as global vs project-specific and recommends matching skills from a central repository when starting new projects.
+Manage the lifecycle of Agent Skills in a central repo: acquire (fetch/curate/dedup-by-digest/audit/provenance/flat-symlink), recommend skills that fit a project, and organize/dedup what you own. Token-frugal — lexical prefilter + LLM, no vectors.
 
 ---
 

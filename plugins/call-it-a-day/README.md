@@ -32,7 +32,7 @@ test/run_tests.sh           # bash 테스트 하네스 (temp 격리)
 ## 환경 변수
 
 - `CALL_IT_A_DAY_VAULT` — vault 경로 (기본 `~/dev/wikis/wiki_claude`)
-- `CALL_IT_A_DAY_HOME` — 마커 등 상태 (기본 `~/.claude/call-it-a-day`)
+- `CALL_IT_A_DAY_HOME` — 마커 등 상태 (기본 `${CLAUDE_PLUGIN_DATA}`, 폴백 `~/.claude/plugins/data/call-it-a-day-wonbywondev-plugins`)
 
 ## 의존성
 
