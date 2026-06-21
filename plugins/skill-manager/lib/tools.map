@@ -1,0 +1,25 @@
+# skill-manager capability map — installed-CLI ↔ role keywords (for tool-overlap dedup).
+# Format: <tool-name><TAB><comma-separated keywords><TAB><wiki-note (optional)>
+# Usage detail in wiki; this file only holds keywords + a pointer (no CLI docs here).
+# Lines starting with # and blank lines ignored. tool-name = the actual COMMAND (what `command -v` reports),
+# so package names are mapped to their binary (oci-cli→oci, vercel-cli→vercel, firebase-cli→firebase, googleworkspace-cli→gws).
+# NOTE: npx-only (ctx7, langfuse-cli) and skill-backed (insane-search) / vendored (excalidraw-cli) tools have no
+# global command → NOT auto-detected by live discovery (v1.1 limitation); kept here for the capability/wiki pointer
+# and for explicit installed-set passing. Auto-flag works for real installed commands (pencil, codegraph, gh, ...).
+pencil	image,design,mockup,ui,visual,wireframe	knowledge/libraries/pencil.md
+codegraph	code graph,symbol,callers,callees,code intelligence,impact	knowledge/libraries/codegraph.md
+ctx7	library docs,api reference,documentation,sdk usage	rules/context7.md
+langfuse-cli	llm observability,tracing,prompt management,evals,langfuse	knowledge/console/langfuse-cli.md
+excalidraw-cli	diagram,whiteboard,sketch,excalidraw	knowledge/console/excalidraw-cli.md
+browser-use	browser automation,navigate,form fill,screenshot,scrape	knowledge/libraries/browser-use.md
+insane-search	bypass blocked,fetch,waf,twitter,reddit,youtube,scrape
+gh	github,pull request,issue,repo,release
+yt-dlp	download video,youtube,subtitles,media
+tailscale	vpn,mesh network,remote access	knowledge/console/tailscale.md
+cloudflared	tunnel,expose localhost,cloudflare
+oci	oracle cloud,oci,instance,compute
+vercel	vercel,deploy,frontend hosting
+firebase	firebase,hosting,firestore,auth
+supabase	supabase,postgres,auth,storage,backend
+gws	google workspace,gmail,drive,calendar
+hf	huggingface,model,dataset,download model

@@ -22,16 +22,28 @@
       "keywords": ["session", "history", "registry", "uuid", "project-management", "lifecycle"]
     },
     {
-      "name": "skill-curator",
-      "description": "[In development — not yet functional] Auto-classifies skills as global vs project-specific and recommends matching skills from central repository for new projects",
-      "version": "1.0.0",
+      "description": "Manage the lifecycle of Agent Skills in a central repo: acquire (fetch/select/dedup-by-digest/audit/rename/provenance/flat-symlink), recommend skills that fit a project, and organize/dedup what you own. Token-frugal: lexical prefilter + LLM, no vectors.",
+      "name": "skill-manager",
+      "version": "0.2.0",
       "author": {
         "name": "won",
         "email": "wonbywondev@gmail.com"
       },
-      "source": "./plugins/skill-curator",
+      "source": "./plugins/skill-manager",
       "category": "productivity",
-      "keywords": ["skills", "curator", "classifier", "recommender"]
+      "keywords": ["skills", "manager", "acquire", "recommend", "dedup", "organize", "provenance"]
+    },
+    {
+      "name": "call-it-a-day",
+      "description": "Greet to bound a workday; on wrap-up summarize the day into Obsidian (per-project daily log + atomic knowledge notes for new libraries and console/CLI rules) and gate compass freshness. Live-captures insights to the vault as they happen.",
+      "version": "0.2.0",
+      "author": {
+        "name": "won",
+        "email": "wonbywondev@gmail.com"
+      },
+      "source": "./plugins/call-it-a-day",
+      "category": "productivity",
+      "keywords": ["daily-log", "obsidian", "knowledge-capture", "compass", "wrap-up"]
     }
   ]
 }
