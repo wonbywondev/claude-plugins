@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/common.sh"
 input=$(cat 2>/dev/null || true)
 prompt=$(printf '%s' "$input" | jq -r '.prompt // empty' 2>/dev/null || true)
 
-NUDGE="[call-it-a-day] 인사이트·새 라이브러리·콘솔/CLI 규칙이 나오면 즉시 wiki(knowledge/libraries|console)에 기록하라(구조 규칙대로, 중복 시 갱신·링크)."
+NUDGE="[wiki] 기록할 만한 인사이트·결정·새 도구/규칙을 감지하면 → 흐름 끊지 말고 INSIGHT/_inbox.md 에 한 줄 jot. 레이어 분류·작성 컨벤션·승격은 wiki-manager 스킬 따름."
 
 case "$(cad_classify "$prompt")" in
   morning)
@@ -20,7 +20,7 @@ case "$(cad_classify "$prompt")" in
     echo "$NUDGE"
     ;;
   wrap)
-    echo "[call-it-a-day] 하루 마무리: call-it-a-day 스킬을 호출해 오늘 작업을 정리하라(프로젝트별 일일 로그 + 그날 knowledge 노트 [[링크]] + 건드린 프로젝트 compass 최신성 점검)."
+    echo "[call-it-a-day] 하루 마무리: call-it-a-day 스킬을 호출해 오늘 작업을 정리하라(INSIGHT/_inbox.md 후보 승격·폐기 + 프로젝트별 일일 로그 + 그날 knowledge 노트 [[링크]] + 건드린 프로젝트 compass 최신성 점검)."
     ;;
   none)
     if cad_marker_active; then echo "$NUDGE"; fi
