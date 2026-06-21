@@ -1,9 +1,12 @@
-# day marker: cad_marker_start / cad_marker_active / cad_marker_started_at / cad_marker_clear
-cad_marker_clear 2>/dev/null || true   # clean slate
+# per-project day marker: cad_marker_* take a project dir (default $PWD)
+A="$(mktemp -d)"; B="$(mktemp -d)"
+cad_marker_clear "$A" 2>/dev/null; cad_marker_clear "$B" 2>/dev/null
 
-assert_eq "초기: inactive"                "inactive"  "$(cad_marker_active && echo active || echo inactive)"
-assert_eq "start: started"                "started"   "$(cad_marker_start)"
-assert_eq "start 후: active"              "active"    "$(cad_marker_active && echo active || echo inactive)"
-assert_eq "started_at 기록됨"             "yes"       "$([ -n "$(cad_marker_started_at)" ] && echo yes || echo no)"
-assert_eq "재 start(미마무리): carryover"  "carryover" "$(cad_marker_start)"
-assert_eq "clear 후: inactive"            "inactive"  "$(cad_marker_clear; cad_marker_active && echo active || echo inactive)"
+assert_eq "A 초기 inactive"        "inactive"  "$(cad_marker_active "$A" && echo active || echo inactive)"
+assert_eq "A start → started"      "started"   "$(cad_marker_start "$A")"
+assert_eq "A active"               "active"    "$(cad_marker_active "$A" && echo active || echo inactive)"
+assert_eq "B는 독립(여전히 inactive)" "inactive" "$(cad_marker_active "$B" && echo active || echo inactive)"
+assert_eq "A started_at 기록"      "yes"       "$([ -n "$(cad_marker_started_at "$A")" ] && echo yes || echo no)"
+assert_eq "A 재start → carryover"  "carryover" "$(cad_marker_start "$A")"
+assert_eq "A clear 후 inactive"    "inactive"  "$(cad_marker_clear "$A"; cad_marker_active "$A" && echo active || echo inactive)"
+rm -rf "$A" "$B"

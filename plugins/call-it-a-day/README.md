@@ -8,7 +8,7 @@
 - **"좋은 아침"** → 하루 시작(마커 기록). 이후 매 턴 라이브 캡처 넛지 ON.
 - **하루 중** → 인사이트·새 라이브러리·콘솔/CLI 규칙을 *얻는 즉시* vault에 기록(컴팩션 손실 방지).
 - **"하루 마무리하자" / "오늘 개발 여기서 마무리"** → `call-it-a-day` 스킬이 그날을 정리:
-  - 프로젝트별 **일일 로그** `daily/<project>/YYYY-MM-DD.md` (한 일·인사이트·해결한 버그·결정 로그)
+  - 프로젝트별 **일일 로그** `daily/YYYY-MM-DD-<project>.md` (한 일·인사이트·해결한 버그·결정 로그)
   - 그날 추가한 **knowledge 노트** `[[링크]]`
   - 건드린 프로젝트 **compass 최신성 점검**(stale면 갱신 권유)
 
@@ -25,7 +25,7 @@ test/run_tests.sh           # bash 테스트 하네스 (temp 격리)
 
 ## Obsidian vault 레이아웃 (`$CALL_IT_A_DAY_VAULT`, 기본 `~/dev/wikis/wiki_claude`)
 
-- `daily/<project>/YYYY-MM-DD.md` — 프로젝트별 일일 로그
+- `daily/YYYY-MM-DD-<project>.md` — 프로젝트별 일일 로그
 - `knowledge/libraries/<lib>.md` — 새 라이브러리
 - `knowledge/console/<tool>.md` — 콘솔/CLI 규칙
 

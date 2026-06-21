@@ -2,9 +2,10 @@
 # call-it-a-day — shared helpers / paths. Sourced by hooks and tests. Do not execute.
 # (Logic functions are added test-first; this file holds only paths/config.)
 
-CALL_IT_A_DAY_HOME="${CALL_IT_A_DAY_HOME:-$HOME/.claude/call-it-a-day}"
+# State dir: explicit override > Claude Code's per-plugin data dir (runtime standard) > standard fallback.
+CALL_IT_A_DAY_HOME="${CALL_IT_A_DAY_HOME:-${CLAUDE_PLUGIN_DATA:-$HOME/.claude/plugins/data/call-it-a-day-wonbywondev-plugins}}"
 VAULT="${CALL_IT_A_DAY_VAULT:-$HOME/dev/wikis/wiki_claude}"
-CAD_MARKER="$CALL_IT_A_DAY_HOME/day-marker"
+CAD_MARKERS_DIR="$CALL_IT_A_DAY_HOME/markers"
 
 # Classify a user prompt: "morning" (day start), "wrap" (day end), or "none".
 # Wrap requires a full phrase (not the bare word 마무리) to avoid false positives.
@@ -19,22 +20,26 @@ cad_classify() {
   echo "none"
 }
 
-# Day marker: a single file recording the start of the current workday.
-cad_marker_active() { [ -f "$CAD_MARKER" ]; }
+# Per-project day marker. Keyed by project path (default $PWD) so parallel
+# projects/sessions each have an independent workday.
+_cad_marker_path() { local p="${1:-$PWD}"; echo "$CAD_MARKERS_DIR/${p//\//%2F}"; }
 
-# Start a day. Fresh → "started". Already active (prev day unwrapped) → "carryover" (kept).
+cad_marker_active() { [ -f "$(_cad_marker_path "${1:-$PWD}")" ]; }
+
+# Start a day for the project. Fresh → "started". Already active → "carryover" (kept).
 cad_marker_start() {
-  if [ -f "$CAD_MARKER" ]; then echo "carryover"; return 0; fi
-  mkdir -p "$(dirname "$CAD_MARKER")"
-  printf '%s\t%s\n' "$(date +%Y-%m-%dT%H:%M:%S)" "$PWD" > "$CAD_MARKER"
+  local proj="${1:-$PWD}" mp; mp="$(_cad_marker_path "$proj")"
+  if [ -f "$mp" ]; then echo "carryover"; return 0; fi
+  mkdir -p "$(dirname "$mp")"
+  printf '%s\t%s\n' "$(date +%Y-%m-%dT%H:%M:%S)" "$proj" > "$mp"
   echo "started"
 }
 
-# Echo the recorded start timestamp (empty if no active day).
-cad_marker_started_at() { [ -f "$CAD_MARKER" ] && cut -f1 "$CAD_MARKER"; }
+# Echo the recorded start timestamp for the project (empty if no active day).
+cad_marker_started_at() { local mp; mp="$(_cad_marker_path "${1:-$PWD}")"; [ -f "$mp" ] && cut -f1 "$mp"; }
 
-# End the day (remove marker).
-cad_marker_clear() { rm -f "$CAD_MARKER"; }
+# End the project's day (remove its marker).
+cad_marker_clear() { rm -f "$(_cad_marker_path "${1:-$PWD}")"; }
 
 # mtime (epoch) of a file — macOS (BSD) then Linux (GNU) fallback.
 _cad_mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null; }
