@@ -21,3 +21,9 @@ assert_eq "prefilter respects K=2" "2" "$(printf '%s\n' "$dd_k" | grep -c .)"
 assert_eq "shared keywords (one)"  "design" "$(sm_shared_keywords 'design,frontend' 'design,backend')"
 assert_eq "shared keywords (none)" ""       "$(sm_shared_keywords 'a,b' 'c,d')"
 assert_eq "shared keywords (sorted multi)" "$(printf 'design\nmotion')" "$(sm_shared_keywords 'motion,design,foo' 'design,motion')"
+
+# --- sm_dedup_corpus: add 시 기존 전체와 비교하도록 전체 카탈로그 + registry digest overlay ---
+sm_register_upsert "pdf" digest="extract pdf TESTMARK digest"
+dd_dc="$(sm_dedup_corpus)"
+assert_eq "dedup corpus = 전체 owned 스킬 망라" "$(sm_list_skills | grep -c .)" "$(printf '%s\n' "$dd_dc" | grep -c .)"
+assert_eq "registry digest가 corpus text로(desc 덮어씀)" "extract pdf TESTMARK digest" "$(printf '%s\n' "$dd_dc" | awk -F'\t' '$1=="pdf"{print $2}')"
