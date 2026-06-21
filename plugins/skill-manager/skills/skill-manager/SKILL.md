@@ -16,8 +16,8 @@ Acquire third-party Agent Skills into the central repo (`~/dev/agent/skills`) th
 2. **select** — if multiple candidates, run `sm_select_filter "<tsv>" "$(sm_installed_tool_keywords)"` → per-candidate `keep|exclude(superseded|already-installed)|flag(tool-overlap)`. The tool-overlap keywords come from `lib/tools.map` filtered to *installed* CLIs (live discovery), so e.g. an `imagegen-*` candidate flags against an installed `pencil`. **Show the user the recommended subset and exclusions; let them confirm.** Single candidate → auto.
 3. **digest** — for each confirmed skill, generate a **1-2 line purpose-digest** by reading the body ONCE: build the prompt with `sm_digest_prompt <skill.md> <name>`, then YOU write the digest text. This is the only time the body enters context.
 4. **dedup (token-frugal)** —
-   - Build a corpus TSV `name⇥digest` from the registry (`sm_register_get`), falling back to existing skills' descriptions.
-   - `sm_prefilter "<new-digest>" "<corpus>" 8 0.08` → top-K candidates. **Empty → no duplicate, skip the LLM judge entirely.**
+   - Build the corpus with **`sm_dedup_corpus`** — *every owned skill* (catalog description) with registry purpose-digests overlaid where present. This compares the new skill against the **whole central repo (~400)**, not just the handful in the registry. One python pass.
+   - `sm_prefilter "<new-digest>" "$(sm_dedup_corpus)" 8 0.08` → top-K candidates. **Empty → no duplicate, skip the LLM judge entirely.**
    - If candidates: compare the new digest against each candidate digest yourself (short text) → duplicate / similar / distinct. Only if digests are genuinely ambiguous, **spawn a subagent** to read the candidate + new bodies and return just a verdict (keeps main context clean).
    - Trigger collision: `sm_shared_keywords "<new-triggers>" "<existing-triggers>"`; if they overlap, warn and **propose a routing note** (CLAUDE.md / wiki), as with pencil ↔ design skills.
    - On duplicate/similar, ask: continue / cancel / replace.

@@ -38,3 +38,32 @@ sm_shared_keywords() {
     for(i=0;i<n;i++) print o[i]
   }'
 }
+
+# Build the dedup corpus for `add`: EVERY owned skill (catalog description) with registry
+# purpose-digests overlaid where present (digests are sharper than descriptions). This makes
+# dedup compare a new skill against the *whole* central repo (~400), not just registry entries.
+# One python pass (not per-skill). Output TSV: name<TAB>text → feed straight to sm_prefilter.
+sm_dedup_corpus() {
+  local repo="${1:-$(sm_skills_repo)}" reg
+  reg="$(sm_registry_path)"
+  sm_catalog "$repo" | python3 -c '
+import json, sys
+reg = sys.argv[1]
+digests = {}
+try:
+    with open(reg) as f:
+        data = json.load(f)
+    for n, rec in (data.get("skills") or {}).items():
+        d = rec.get("digest") if isinstance(rec, dict) else None
+        if d:
+            digests[n] = d
+except Exception:
+    pass
+for line in sys.stdin:
+    line = line.rstrip("\n")
+    if not line:
+        continue
+    name, _, desc = line.partition("\t")
+    print(f"{name}\t{digests.get(name, desc)}")
+' "$reg"
+}
