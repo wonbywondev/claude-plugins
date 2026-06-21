@@ -1,0 +1,10 @@
+{
+  "name": "skill-manager",
+  "version": "0.2.0",
+  "description": "Manage the lifecycle of Agent Skills in a central repo. Acquire (fetch a repo, select a subset, dedup by purpose-digest, audit/rename, record provenance, flat-symlink to global/project), recommend skills that fit a project, and organize/dedup what you own. Token-frugal: lexical prefilter + LLM, no vectors. Entry: \"install skills from this repo\" / \"recommend skills for this project\".",
+  "author": { "name": "won", "email": "wonbywondev@gmail.com" },
+  "homepage": "https://github.com/wonbywondev/claude-plugins/tree/main/plugins/skill-manager",
+  "repository": "https://github.com/wonbywondev/claude-plugins",
+  "license": "MIT",
+  "keywords": ["skills", "manager", "acquire", "recommend", "dedup", "organize", "provenance"]
+}

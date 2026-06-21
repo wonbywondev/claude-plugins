@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Minimal test runner for skill-curator
+# Minimal test runner for skill-manager
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -85,13 +85,21 @@ done
 for d in "$MOCK_CENTRAL"/n8n/*/; do
   touch "$d/SKILL.md"
 done
+# Group roots have NO SKILL.md of their own (only their leaf skills do)
+rm -f "$MOCK_CENTRAL/notion/SKILL.md" "$MOCK_CENTRAL/n8n/SKILL.md"
 
 # Export env vars for common.sh
 export SKILLS_REPO="$MOCK_CENTRAL"
 export GLOBAL_SKILLS_DIR="$MOCK_GLOBAL"
+export SKILL_MANAGER_HOME="$TMPDIR_ROOT/curator-home"
+mkdir -p "$SKILL_MANAGER_HOME"
 
-# Source common.sh
-source "$PLUGIN_DIR/hooks/common.sh"
+# Source all lib modules (common.sh first)
+source "$PLUGIN_DIR/lib/common.sh"
+for libf in "$PLUGIN_DIR"/lib/*.sh; do
+  [ "$(basename "$libf")" = "common.sh" ] && continue
+  source "$libf"
+done
 
 # ─── Run test files ──────────────────────────────────────────
 for test_file in "$SCRIPT_DIR"/test_*.sh; do
