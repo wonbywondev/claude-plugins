@@ -25,9 +25,9 @@ claude plugin install preserve-session
 
 자세한 내용, 데모, 워크플로우는 [plugins/preserve-session/README.ko.md](./plugins/preserve-session/README.ko.md)를 참조하세요.
 
-### [skill-curator](./plugins/skill-curator)
+### [skill-manager](./plugins/skill-manager)
 
-_(개발 중)_ 스킬을 global / project-specific으로 자동 분류하고, 새 프로젝트 시작 시 중앙 저장소에서 어울리는 스킬을 추천합니다.
+중앙 저장소의 Agent Skill 생애주기를 관리합니다: 획득(fetch·큐레이션·digest 중복제거·audit·provenance·flat-symlink), 프로젝트에 맞는 스킬 추천, 보유 스킬 정리/중복제거. 토큰 절약 — 어휘 프리필터 + LLM, 벡터 없음.
 
 ---
 
