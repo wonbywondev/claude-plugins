@@ -1,6 +1,8 @@
-# cad_compass_stale <project_dir> → stale | fresh | no-compass
+# cad_compass_stale <project_dir> → stale | fresh | no-compass | bad-path
 P="$(mktemp -d)"
 assert_eq "compass 폴더 없음 → no-compass" "no-compass" "$(cad_compass_stale "$P")"
+# 존재하지 않는 경로(이름만 줬거나 오타) → bad-path : 진짜 no-compass와 구분(false no-compass 오진 차단)
+assert_eq "존재 안 하는 경로 → bad-path" "bad-path" "$(cad_compass_stale "$P/nope")"
 
 mkdir -p "$P/compass"
 touch -t 202606100900 "$P/compass/plan.md"
