@@ -45,9 +45,14 @@ cad_marker_clear() { rm -f "$(_cad_marker_path "${1:-$PWD}")"; }
 _cad_mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null; }
 
 # Is a project's compass stale (any source file newer than newest compass/*.md)?
-# → "stale" | "fresh" | "no-compass". Ignores compass/, .git/, node_modules/.
+# → "stale" | "fresh" | "no-compass" | "bad-path". Ignores compass/, .git/, node_modules/.
+# ⚠ mtime-based = catches *time* staleness only, NOT *semantic* staleness. It is also
+#   self-defeating: touching any compass/*.md at round-end bumps its mtime → reports "fresh"
+#   even if a section is semantically wrong. Use ONLY as a cheap hint; semantic re-sync is the
+#   agent's re-read job (see compass-gate Stop hook). `proj` MUST be a real path, not a bare name.
 cad_compass_stale() {
   local proj="$1" f m nc=0 ns=0
+  [ -d "$proj" ] || { echo "bad-path"; return; }   # bare name / typo → not the same as no-compass
   [ -d "$proj/compass" ] || { echo "no-compass"; return; }
   for f in "$proj"/compass/*.md; do
     [ -f "$f" ] || continue

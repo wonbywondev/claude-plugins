@@ -41,9 +41,11 @@ metadata:
 2. **일일 로그** `daily/YYYY-MM-DD-<project>.md` 생성/추가 (건드린 프로젝트마다 한 파일). **날짜 = 그 하루의 시작("좋은 아침") 날짜** — 마커 있으면 `cad_marker_started_at`, 없으면 작업이 일어난 날(자정 넘겨 마무리해도 마무리 시각의 날짜가 아님). 섹션:
    - **한 일** (요약) / **인사이트** / **해결한 버그** / **결정 로그** / **오늘 추가한 knowledge** (`[[링크]]`).
 3. **knowledge 링크 연결** — 오늘 라이브 캡처한 노트들을 일일 로그에서 `[[링크]]`.
-4. **compass 최신성 점검** — 건드린 각 프로젝트에 대해 `cad_compass_stale <project>` 실행:
-   - `stale` → "⚠️ <project> compass 갱신 필요(소스가 compass보다 최신)" 플래그하고 **마무리 전에 갱신 권유**.
+4. **compass 최신성 점검** — 건드린 각 프로젝트에 대해 `cad_compass_stale <프로젝트 절대경로>` 실행 (⚠ **이름 말고 절대경로** — `~/dev/projects/foo` 식. 이름만 주면 `bad-path`):
+   - `stale` → "⚠️ compass 갱신 필요(소스가 compass보다 최신)" 플래그하고 **마무리 전에 갱신 권유**.
    - `no-compass` → compass 미사용 프로젝트(무시 또는 권유).
+   - `bad-path` → 경로 잘못 줬다는 뜻 → 절대경로로 재실행.
+   - ⚠ 이건 **mtime 힌트일 뿐 의미 staleness는 못 잡는다**(compass를 끝에 건드리면 'fresh'로 뜸). `fresh`라도 코드를 크게 바꿨으면 context.md를 **직접 재독**해 모순 섹션을 확인할 것.
 5. **요약 보고** + 마커 정리(`cad_marker_clear <project>` — 해당 프로젝트만).
 6. 기록할 게 없던 하루면 빈 로그를 만들지 말고 그 사실만 보고.
 
