@@ -44,6 +44,25 @@ cad_marker_clear() { rm -f "$(_cad_marker_path "${1:-$PWD}")"; }
 # mtime (epoch) of a file — macOS (BSD) then Linux (GNU) fallback.
 _cad_mtime() { stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null; }
 
+# Source files whose mtime counts toward staleness (compass excluded).
+# git repo → tracked files only, so .gitignore'd noise (log/, tmp/, build artifacts that a
+#   runner touches every boot) is auto-excluded → kills the false-positive stale.
+# non-git → find with an expanded noise-path denylist.
+_cad_source_files() {
+  local proj="$1"
+  if git -C "$proj" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    git -C "$proj" ls-files 2>/dev/null | grep -v '^compass/' | while IFS= read -r f; do
+      printf '%s\n' "$proj/$f"
+    done
+  else
+    find "$proj" -type f \
+      -not -path "*/compass/*" -not -path "*/.git/*" -not -path "*/node_modules/*" \
+      -not -path "*/log/*" -not -path "*/tmp/*" -not -path "*/.codegraph/*" \
+      -not -path "*/coverage/*" -not -path "*/dist/*" -not -path "*/build/*" \
+      -not -path "*/.next/*" -not -path "*/.cache/*" -not -path "*/vendor/*" 2>/dev/null
+  fi
+}
+
 # Is a project's compass stale (any source file newer than newest compass/*.md)?
 # → "stale" | "fresh" | "no-compass" | "bad-path". Ignores compass/, .git/, node_modules/.
 # ⚠ mtime-based = catches *time* staleness only, NOT *semantic* staleness. It is also
@@ -61,6 +80,6 @@ cad_compass_stale() {
   [ "$nc" -eq 0 ] && { echo "no-compass"; return; }
   while IFS= read -r f; do
     m=$(_cad_mtime "$f"); [ "${m:-0}" -gt "$ns" ] && ns=$m
-  done < <(find "$proj" -type f -not -path "*/compass/*" -not -path "*/.git/*" -not -path "*/node_modules/*" 2>/dev/null)
+  done < <(_cad_source_files "$proj")
   if [ "$ns" -gt "$nc" ]; then echo "stale"; else echo "fresh"; fi
 }
