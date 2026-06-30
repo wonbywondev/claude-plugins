@@ -27,7 +27,17 @@ See [plugins/preserve-session/README.md](./plugins/preserve-session/README.md) f
 
 ### [skill-manager](./plugins/skill-manager)
 
-Manage the lifecycle of Agent Skills in a central repo: acquire (fetch/curate/dedup-by-digest/audit/provenance/flat-symlink), recommend skills that fit a project, and organize/dedup what you own. Token-frugal — lexical prefilter + LLM, no vectors.
+Manage the lifecycle of Agent Skills in a central repo: acquire (fetch/curate/dedup-by-digest/audit/provenance/flat-symlink), recommend skills that fit a project, and organize/dedup what you own. Token-frugal — lexical prefilter + LLM, no vectors. Nudges you toward a **dormant** skill when you name it (skill-aware hook), and surfaces unused active skills via usage stats (token hygiene).
+
+**Commands:** `add` · `recommend` · `status`
+
+See [plugins/skill-manager/README.md](./plugins/skill-manager/README.md).
+
+### [call-it-a-day](./plugins/call-it-a-day)
+
+Bound a workday with a greeting and roll the day's dev work into an Obsidian knowledge base — live-capture as it happens + wrap-up summary (per-project daily log, atomic knowledge notes). Includes a **compass-sync Stop gate** that blocks turn-end re-sync when a project's design docs go stale after code changes.
+
+See [plugins/call-it-a-day/README.md](./plugins/call-it-a-day/README.md).
 
 ---
 
