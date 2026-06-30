@@ -15,3 +15,12 @@ assert_eq "fresh → skip"                        "skip"  "$(cg_decide false fre
 assert_eq "no-compass → skip"                   "skip"  "$(cg_decide false no-compass  no)"
 assert_eq "bad-path → skip"                     "skip"  "$(cg_decide false bad-path    no)"
 assert_eq "stale+작업중+cue없음 → block"        "block" "$(cg_decide false stale       no)"
+
+# --- cg_branch_skip: .compass-gate-skip 에 현재 브랜치 있으면 게이트 스킵 ---
+SK="$(mktemp -d)"; printf 'main\nrelease/x\n' > "$SK/.compass-gate-skip"
+cg_branch_skip "$SK" "main"      && r=skip || r=no; assert_eq "skip목록 브랜치 → skip"  "skip" "$r"
+cg_branch_skip "$SK" "release/x" && r=skip || r=no; assert_eq "skip목록 브랜치2 → skip" "skip" "$r"
+cg_branch_skip "$SK" "feature/y" && r=skip || r=no; assert_eq "목록 밖 브랜치 → no"     "no"   "$r"
+cg_branch_skip "$SK" ""          && r=skip || r=no; assert_eq "빈 브랜치 → no"          "no"   "$r"
+SK2="$(mktemp -d)"; cg_branch_skip "$SK2" "main" && r=skip || r=no; assert_eq "skip파일 없음 → no" "no" "$r"
+rm -rf "$SK" "$SK2"
