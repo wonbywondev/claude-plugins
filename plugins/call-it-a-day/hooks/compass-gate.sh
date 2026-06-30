@@ -23,6 +23,14 @@ cg_decide() {
   echo skip                                               # fresh / no-compass / bad-path → silent
 }
 
+# Branch opt-out: <cwd>/.compass-gate-skip lists branch names (one per line) to skip. → 0=skip.
+cg_branch_skip() {
+  local cwd="$1" branch="$2"
+  [ -n "$branch" ] || return 1
+  [ -f "$cwd/.compass-gate-skip" ] || return 1
+  grep -qxF "$branch" "$cwd/.compass-gate-skip" 2>/dev/null
+}
+
 # Last user utterance from the transcript JSONL (best-effort).
 cg_last_user_text() {
   local tr="$1"
@@ -55,6 +63,8 @@ if [ "${BASH_SOURCE[0]:-$0}" = "${0}" ]; then
   stop_active=$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false')
   cwd=$(printf '%s' "$INPUT" | jq -r '.cwd // empty')
   tr=$(printf '%s' "$INPUT" | jq -r '.transcript_path // empty')
+  # Branch opt-out (<cwd>/.compass-gate-skip)
+  cg_branch_skip "$cwd" "$(git -C "${cwd:-.}" rev-parse --abbrev-ref HEAD 2>/dev/null)" && exit 0
   cue=no; cg_stop_cue "$(cg_last_user_text "$tr")" && cue=yes
   stale=$(cad_compass_stale "${cwd:-/nonexistent-xyz}")
   if [ "$(cg_decide "$stop_active" "$stale" "$cue")" = "block" ]; then
