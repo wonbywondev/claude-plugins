@@ -1,6 +1,6 @@
 # claude-plugins
 
-[![English](https://img.shields.io/badge/lang-English-lightgrey)](./README.md)
+[![English](https://img.shields.io/badge/lang-English-lightgrey)](./README.ko.md)
 
 wonbywondev의 개인 [Claude Code](https://claude.ai/code) 플러그인 모음.
 
@@ -31,13 +31,13 @@ claude plugin install preserve-session
 
 **커맨드:** `add` · `recommend` · `status`
 
-자세한 내용은 [plugins/skill-manager/README.md](./plugins/skill-manager/README.md) 참조.
+자세한 내용은 [plugins/skill-manager/README.ko.md](./plugins/skill-manager/README.ko.md) 참조.
 
 ### [call-it-a-day](./plugins/call-it-a-day)
 
 인사로 하루를 구분하고 그날 개발을 Obsidian 지식베이스로 정리합니다 — 라이브 캡처(즉시 기록) + 마무리 요약(프로젝트별 일일 로그·아토믹 knowledge 노트). 코드 변경 후 설계 문서(compass)가 stale이면 턴 끝에 재정합을 강제하는 **compass 정합 Stop 게이트** 포함.
 
-자세한 내용은 [plugins/call-it-a-day/README.md](./plugins/call-it-a-day/README.md) 참조.
+자세한 내용은 [plugins/call-it-a-day/README.ko.md](./plugins/call-it-a-day/README.ko.md) 참조.
 
 ---
 
