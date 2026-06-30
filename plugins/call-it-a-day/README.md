@@ -11,16 +11,18 @@
   - 프로젝트별 **일일 로그** `daily/YYYY-MM-DD-<project>.md` (한 일·인사이트·해결한 버그·결정 로그)
   - 그날 추가한 **knowledge 노트** `[[링크]]`
   - 건드린 프로젝트 **compass 최신성 점검**(stale면 갱신 권유)
+- **턴 끝(Stop) → compass 정합 게이트** — compass 있는 프로젝트에서 코드를 바꾼 채 끝내려 하면, **stale일 때만**(git-tracked 기준, log/tmp 노이즈 제외) 턴을 되돌려 *context.md 재독·재정합*을 강제(`decision:block`). 무한방지(`stop_hook_active`+8-block cap), 사용자 멈춤 cue("그만/마무리")·`.compass-gate-skip` 브랜치는 스킵. compass 손대면 자동 해제.
 
 ## 구조
 
 ```
 hooks/
-  common.sh                 # cad_classify, cad_marker_*, cad_compass_stale, _cad_mtime
+  common.sh                 # cad_classify, cad_marker_*, cad_compass_stale(git-tracked), _cad_source_files
   user-prompt-submit.sh     # UserPromptSubmit: 감지→마커/넛지/트리거
-  hooks.json                # UserPromptSubmit 등록
-skills/call-it-a-day/SKILL.md   # 마무리 절차 + 라이브 캡처 구조 규칙
-test/run_tests.sh           # bash 테스트 하네스 (temp 격리)
+  compass-gate.sh           # Stop: stale 시 재정합 강제 (cg_decide/cg_stop_cue/cg_branch_skip)
+  hooks.json                # UserPromptSubmit + Stop 등록
+skills/call-it-a-day/SKILL.md   # 마무리 절차 + 라이브 캡처 구조 규칙 + compass-gate 재독 지시
+test/  run_tests.sh test_*.sh   # bash 하네스 (compass·gate·paths 포함, temp 격리)
 ```
 
 ## Obsidian vault 레이아웃 (`$CALL_IT_A_DAY_VAULT`, 기본 `~/dev/wikis/wiki_claude`)

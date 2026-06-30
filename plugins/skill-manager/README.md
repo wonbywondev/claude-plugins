@@ -27,6 +27,14 @@ Or just say it: *"이 repo로 스킬 설치해줘"* / *"install skills from this
 - **register** — `registry.json`: source, source_type, fork_commit, license, upstream_dir, **digest**, trigger_keywords, scope, link_mode.
 - **link** — flat per-skill symlink into global (`$GLOBAL_SKILLS_DIR`) or `project:<path>/.claude/skills`. Group folders are never linked whole (Claude Code discovers one level only).
 
+## skill-aware (dormant 스킬 호명 시 안내)
+
+UserPromptSubmit 훅 — 프롬프트가 **dormant(보유했으나 글로벌 미링크) 스킬을 호명 + 활용의도**("써/사용/활용/돌려…")일 때만 *"skill-manager로 활성화"* 안내를 주입. 활성 스킬은 네이티브로 발동하니 침묵하고, `pdf`·`notion` 같은 일반명사 스킬의 false-positive는 활용의도 게이트로 회피.
+
+## sm_usage (사용통계 — 토큰 위생)
+
+전체 세션 transcript의 Skill 호출을 집계(`skill⇥count⇥last_used`, 호출순). `/skill-manager:status`가 함께 표시 → **활성인데 호출 0**(매 세션 description 토큰 상주)을 드러냄. ⚠ 강등은 자동 X — 사용자 "스킬 정리" 요청 시에만 통계 근거로 논의(dormant는 항상 0이라 무의미, 상황대기형 variant는 유지).
+
 ## Paths (env override)
 
 ```
@@ -38,10 +46,11 @@ SKILL_MANAGER_HOME ${SKILL_MANAGER_HOME:-${CLAUDE_PLUGIN_DATA:-~/.claude/plugins
 ## Layout
 
 ```
-lib/      common.sh fetch.sh select.sh digest.sh dedup.sh audit.sh place.sh register.sh link.sh
+lib/      common fetch select digest dedup audit place register link recommend usage skill_aware  (.sh)
 commands/ add.md recommend.md status.md
+hooks/    skill-aware.sh hooks.json   # UserPromptSubmit: dormant 스킬 호명 시 활성화 안내
 skills/skill-manager/SKILL.md
-test/     run_tests.sh test_*.sh   (bash harness; 110 tests)
+test/     run_tests.sh test_*.sh   (bash harness; 122 tests)
 ```
 
 ## Develop / test
