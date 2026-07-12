@@ -33,7 +33,7 @@ Also cross-check: skills in the registry whose symlink is missing or dangling, a
 
 ```bash
 source "${CLAUDE_PLUGIN_ROOT}/lib/routing.sh"
-sm_routing_lint "$(sm_skills_repo)/ROUTING.md" "$(sm_skills_repo)" "call-it-a-day,serena,humanize-korean"
+sm_routing_lint "$(sm_skills_repo)/ROUTING.md" "$(sm_skills_repo)" "call-it-a-day,serena"
 ```
 
 - 출력: `missing:<이름>`(원장에 있는데 스킬 실물 없음 — 리네임/제거 시 원장 부패) / `single:<행>`(이름 1개짜리 행 = 재설명, 행 자격 위반). **빈 출력 = clean.**
