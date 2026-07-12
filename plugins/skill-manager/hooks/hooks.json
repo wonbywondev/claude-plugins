@@ -1,5 +1,5 @@
 {
-  "description": "skill-manager: nudge when a dormant (owned-but-unlinked) skill is named with use-intent.",
+  "description": "skill-manager: dormant-skill nudge (UserPromptSubmit) + relations-ledger injection on skill invocation (PreToolUse).",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -7,6 +7,18 @@
           {
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/skill-aware.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/skill-routing.sh",
             "timeout": 10
           }
         ]

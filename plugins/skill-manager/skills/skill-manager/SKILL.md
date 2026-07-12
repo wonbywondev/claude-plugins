@@ -42,7 +42,7 @@ When the user wants skills *for a project* ("이 프로젝트에 맞는 스킬 �
 
 ## Helpers
 
-`source ${CLAUDE_PLUGIN_ROOT}/lib/common.sh` then `lib/{fetch,select,digest,dedup,audit,place,register,link,recommend,usage,skill_aware}.sh`. Paths via `SKILLS_REPO` / `GLOBAL_SKILLS_DIR` / `SKILL_MANAGER_HOME` (env override).
+`source ${CLAUDE_PLUGIN_ROOT}/lib/common.sh` then `lib/{fetch,select,digest,dedup,audit,place,register,link,recommend,usage,skill_aware,routing}.sh`. Paths via `SKILLS_REPO` / `GLOBAL_SKILLS_DIR` / `SKILL_MANAGER_HOME` (env override).
 
 ## Usage stats (sm_usage) — 토큰 위생
 `sm_usage [projects_dir]` → transcript의 Skill 호출을 집계(`skill⇥count⇥last_used`, 호출순). `/skill-manager:status`가 함께 표시. **활성인데 호출 0 = 매 세션 description 토큰 상주** 후보를 드러냄. 단 ① dormant는 항상 0(비활성이라 무의미) ② 상황대기형(gpt-taste·variant)은 0이어도 유지. ⚠ **강등은 자동 X — 사용자가 "스킬 정리" 요청할 때만** 통계 근거로 함께 논의.

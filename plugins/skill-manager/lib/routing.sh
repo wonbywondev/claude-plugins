@@ -5,6 +5,11 @@
 # Ledger format: "## category" sections, entries are blank-line-separated paragraphs,
 # skill names in `backticks`, entry qualification = >=2 names (no single-skill re-description).
 
+# sm_skill_base_name <invocation> → strip plugin namespace ("plug:skill" → "skill").
+sm_skill_base_name() {
+  printf '%s\n' "${1##*:}"
+}
+
 # sm_routing_lookup <routing_file> <name...> → print only paragraphs mentioning any name.
 # Empty output = no recorded relationship = proceed.
 sm_routing_lookup() {

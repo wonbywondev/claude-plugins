@@ -40,4 +40,9 @@ assert_eq       "lint: extra 허용 시 클린"       "" "$(sm_routing_lint "$RF
 printf -- '\n- `stop-slop`: 혼자 재설명하는 행(금지 패턴).\n' >> "$RF"
 assert_contains "lint: 이름 1개 행 플래그"       "single:" "$(sm_routing_lint "$RF" "$RREPO" kill-ai-slop)"
 
+# --- 훅용 이름 정규화: 플러그인 네임스페이스 제거 ---
+assert_eq "base name: 플러그인 네임스페이스 제거" "call-it-a-day" "$(sm_skill_base_name 'call-it-a-day:call-it-a-day')"
+assert_eq "base name: 접두 다른 네임스페이스"      "recommend"     "$(sm_skill_base_name 'skill-manager:recommend')"
+assert_eq "base name: 무네임스페이스 그대로"       "stop-slop"     "$(sm_skill_base_name 'stop-slop')"
+
 rm -rf "$RT"
