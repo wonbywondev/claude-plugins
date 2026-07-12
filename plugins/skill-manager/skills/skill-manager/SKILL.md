@@ -44,5 +44,9 @@ When the user wants skills *for a project* ("이 프로젝트에 맞는 스킬 �
 
 `source ${CLAUDE_PLUGIN_ROOT}/lib/common.sh` then `lib/{fetch,select,digest,dedup,audit,place,register,link,recommend,usage,skill_aware,routing}.sh`. Paths via `SKILLS_REPO` / `GLOBAL_SKILLS_DIR` / `SKILL_MANAGER_HOME` (env override).
 
-## Usage stats (sm_usage) — 토큰 위생
-`sm_usage [projects_dir]` → transcript의 Skill 호출을 집계(`skill⇥count⇥last_used`, 호출순). `/skill-manager:status`가 함께 표시. **활성인데 호출 0 = 매 세션 description 토큰 상주** 후보를 드러냄. 단 ① dormant는 항상 0(비활성이라 무의미) ② 상황대기형(gpt-taste·variant)은 0이어도 유지. ⚠ **강등은 자동 X — 사용자가 "스킬 정리" 요청할 때만** 통계 근거로 함께 논의.
+## Usage stats — 토큰 위생 (관측층 소비)
+`sm_usage_auto` → **telemetry DB 우선**(`~/dev/agent/data/claude-code-toolcalls.db`, 멱등 증분·즉답), 없으면 `sm_usage`(transcript jsonl 풀스캔) 폴백. `skill⇥count⇥last_used` 호출순. `/skill-manager:status`가 표시. **활성인데 호출 0 = 매 세션 description 토큰 상주** 후보. 단 ① dormant는 항상 0(무의미) ② 상황대기형(gpt-taste·variant)은 0이어도 유지. ⚠ **강등은 자동 X — 사용자 "스킬 정리" 요청 시에만** 논의.
+
+### 관측층 경계·활용 (⚠ read-only)
+- `~/dev/agent/data/*`(calls·skill_versions·events)의 **쓰기 주체는 임포터뿐**(계약: 그 폴더 README). skill-manager는 **SELECT만**(`mode=ro`) — INSERT/UPDATE/스키마 변경 절대 금지.
+- **로컬 변조·버전 drift 검사 = `skill_versions`**(SKILL.md sha256 시간축): 설치일 이후 새 sha 등장 = 로컬 수정 or 업데이트. upstream 추적은 registry `fork_commit`과 조합(3점 대조: upstream@HEAD ↔ fork_commit ↔ 우리 사본). 별도 content-hash 저장은 **하지 않는다**(skill_versions가 상위호환 — 현재 해시가 아닌 이력).

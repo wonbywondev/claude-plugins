@@ -45,12 +45,14 @@ sm_routing_lint "$(sm_skills_repo)/ROUTING.md" "$(sm_skills_repo)" "call-it-a-da
 
 ```bash
 source "${CLAUDE_PLUGIN_ROOT}/lib/usage.sh"
-echo "# Skill 호출 통계 (전체 세션 transcript, 호출순)"
-sm_usage | head -25   # skill <TAB> count <TAB> last_used
+echo "# Skill 호출 통계 (telemetry DB 우선, 없으면 transcript 스캔 폴백)"
+sm_usage_auto | head -25   # skill <TAB> count <TAB> last_used
 echo "# 활성(글로벌 링크)인데 호출 0 — 매 세션 description 토큰 상주 중:"
-used="$(sm_usage | cut -f1)"
+used="$(sm_usage_auto | cut -f1)"
 for d in "$(sm_global_dir)"/*; do n="$(basename "$d")"; printf '%s\n' "$used" | grep -qx "$n" || echo "  $n"; done
 ```
+
+- **1차 소스 = `~/dev/agent/data/claude-code-toolcalls.db`**(멱등 증분 임포트, 즉답) — **read-only 소비**(SELECT만, `mode=ro`). DB의 쓰기 주체는 임포터뿐(스키마 계약: `~/dev/agent/data/README.md`) — skill-manager는 절대 write하지 않는다. DB는 사후 일괄 임포트라 최신 세션 몇 개는 누락될 수 있음(그 정밀도가 필요하면 `sm_usage`(jsonl 풀스캔)).
 
 - **호출 0의 의미 분리**: ① 진짜 미사용(강등하면 토큰 절약) vs ② 상황 대기(gpt-taste·스타일 variant·geo-audit 등 — 그 상황 오면 씀). dormant 스킬은 항상 0(비활성이라) → 통계로 판단하지 말 것.
 - ⚠ **강등은 자동 제안·실행하지 않는다.** 통계는 *정보 제공만*. 활성→dormant 강등은 **사용자가 "스킬 정리하자"고 요청할 때만** 함께 논의·결정한다(되돌리기 쉬운 심링크지만 사용자 주도).
