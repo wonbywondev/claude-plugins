@@ -29,6 +29,16 @@ PY
 
 Also cross-check: skills in the registry whose symlink is missing or dangling, and skills in `SKILLS_REPO` not yet registered (candidates for lazy digest backfill).
 
+## Routing ledger 위생 (sm_routing_lint)
+
+```bash
+source "${CLAUDE_PLUGIN_ROOT}/lib/routing.sh"
+sm_routing_lint "$(sm_skills_repo)/ROUTING.md" "$(sm_skills_repo)" "call-it-a-day,serena,humanize-korean"
+```
+
+- 출력: `missing:<이름>`(원장에 있는데 스킬 실물 없음 — 리네임/제거 시 원장 부패) / `single:<행>`(이름 1개짜리 행 = 재설명, 행 자격 위반). **빈 출력 = clean.**
+- extra 목록(셋째 인자) = repo 밖에 사는 플러그인 스킬들. 새 플러그인 스킬을 원장에 등재하면 여기도 추가.
+
 ## 사용 통계 (sm_usage)
 
 호출 빈도/최근 사용을 transcript에서 집계해 함께 보여준다 — **활성 스킬의 토큰 위생** 참고용.

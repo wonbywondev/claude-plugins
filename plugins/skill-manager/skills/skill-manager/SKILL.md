@@ -19,7 +19,8 @@ Acquire third-party Agent Skills into the central repo (`~/dev/agent/skills`) th
    - Build the corpus with **`sm_dedup_corpus`** — *every owned skill* (catalog description) with registry purpose-digests overlaid where present. This compares the new skill against the **whole central repo (~400)**, not just the handful in the registry. One python pass.
    - `sm_prefilter "<new-digest>" "$(sm_dedup_corpus)" 8 0.08` → top-K candidates. **Empty → no duplicate, skip the LLM judge entirely.**
    - If candidates: compare the new digest against each candidate digest yourself (short text) → duplicate / similar / distinct. Only if digests are genuinely ambiguous, **spawn a subagent** to read the candidate + new bodies and return just a verdict (keeps main context clean).
-   - Trigger collision: `sm_shared_keywords "<new-triggers>" "<existing-triggers>"`; if they overlap, warn and **propose a routing note** (CLAUDE.md / wiki), as with pencil ↔ design skills.
+   - Trigger collision: `sm_shared_keywords "<new-triggers>" "<existing-triggers>"`; overlap → warn.
+   - **Relations ledger**: on similar/collision, run `sm_routing_lookup "$(sm_skills_repo)/ROUTING.md" <new> <counterpart>` (기존 관계 확인) → **ROUTING.md에 관계 항목 append를 제안**(행 자격: `백틱` 스킬명 2개+, 관계 1~2줄; 사용자 컨펌 후 쓰기). 관계는 registry digest에 넣지 않는다(digest=정체성만). 활성 스킬 description의 "Not for X — use Y" 1절은 런타임 분기 **캐시**로 별개 유지(서드파티 본문은 불변 — ROUTING.md에만).
    - On duplicate/similar, ask: continue / cancel / replace.
 5. **audit** — `sm_audit_check <skill.md>` (fix missing frontmatter); `sm_audit_invocation <skill.md> <upstream_dir>` → the **invocation name** (= place folder name; frontmatter `name` normalized).
 6. **place** — `sm_place <src> <invocation_name> [group] [license_file]`. Folder name = invocation name (rename). Group only in the source repo (e.g. `taste-skill/<name>`); third-party → carry LICENSE.
