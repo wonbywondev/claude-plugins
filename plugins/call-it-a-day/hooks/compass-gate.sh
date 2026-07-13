@@ -2,6 +2,14 @@
 # Stop hook — when a project's compass is STALE and the user is NOT stopping, block the
 # round-end and tell the agent to re-read context.md and re-sync. Self-releases once compass
 # is touched (mtime → fresh). Source-safe: helpers below, main only runs when executed.
+#
+# git worktree: the gate is silent there BY DESIGN, not by accident. compass/ is gitignored so a
+# linked worktree has none (→ no-compass → skip). That's correct: a worktree holds *provisional*
+# work that may be discarded, and writing unsettled decisions into the ledger pollutes it (plus
+# parallel worktrees would contend over one compass). Reconciliation is deferred, not waived —
+# the merge into the main checkout bumps tracked-source mtimes, so the gate fires THERE and
+# forces the re-sync (verified 2026-07-13: main fresh → worktree silent → post-merge stale).
+# Gap: merging via a remote PR without pulling into the main checkout delays the catch until pull.
 _CG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 # shellcheck disable=SC1091
 source "$_CG_DIR/common.sh"   # cad_compass_stale

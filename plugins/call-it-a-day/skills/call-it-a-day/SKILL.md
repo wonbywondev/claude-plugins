@@ -46,6 +46,7 @@ metadata:
    - `no-compass` → compass 미사용 프로젝트(무시 또는 권유).
    - `bad-path` → 경로 잘못 줬다는 뜻 → 절대경로로 재실행.
    - ⚠ 이건 **mtime 힌트일 뿐 의미 staleness는 못 잡는다**(compass를 끝에 건드리면 'fresh'로 뜸). `fresh`라도 코드를 크게 바꿨으면 context.md를 **직접 재독**해 모순 섹션을 확인할 것.
+   - **git worktree에서 작업했다면**: 그 트리는 compass 부재(gitignore) → 점검 대상 아님. 정합은 **병합받는 주 체크아웃**에서 잡는다(병합이 소스 mtime을 올려 게이트가 stale로 회수). 단 **원격 PR로 병합하고 pull을 안 했으면** 게이트가 늦게 걸리니, 마무리 때 그 주 체크아웃을 직접 점검할 것.
 5. **요약 보고** + 마커 정리(`cad_marker_clear <project>` — 해당 프로젝트만).
 6. 기록할 게 없던 하루면 빈 로그를 만들지 말고 그 사실만 보고.
 
