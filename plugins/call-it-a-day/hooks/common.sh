@@ -69,9 +69,23 @@ _cad_source_files() {
 #   self-defeating: touching any compass/*.md at round-end bumps its mtime → reports "fresh"
 #   even if a section is semantically wrong. Use ONLY as a cheap hint; semantic re-sync is the
 #   agent's re-read job (see compass-gate Stop hook). `proj` MUST be a real path, not a bare name.
+# Is <dir> a *linked* worktree (not the main checkout)? Orca worktrees are real git worktrees,
+# so this covers both raw `git worktree` and Orca's (~/orca/workspaces/...).
+_cad_is_linked_worktree() {
+  local proj="$1" common top
+  common=$(git -C "$proj" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) || return 1
+  top=$(git -C "$proj" rev-parse --show-toplevel 2>/dev/null) || return 1
+  [ -n "$common" ] && [ "$common" != "$top/.git" ]
+}
+
 cad_compass_stale() {
   local proj="$1" f m nc=0 ns=0
   [ -d "$proj" ] || { echo "bad-path"; return; }   # bare name / typo → not the same as no-compass
+  # Linked worktree → skip the verdict entirely. Isolated trees hold provisional work that may be
+  # discarded, and Orca's default ship path is push+PR, so reconciliation belongs to the main
+  # checkout that receives the merge. Even when a setup hook symlinks compass/ in (to inherit the
+  # design intent for *reading*), the gate must not fire here — that's the write-deferral policy.
+  _cad_is_linked_worktree "$proj" && { echo "worktree"; return; }
   [ -d "$proj/compass" ] || { echo "no-compass"; return; }
   for f in "$proj"/compass/*.md; do
     [ -f "$f" ] || continue
