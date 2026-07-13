@@ -33,3 +33,26 @@ assert_eq "git: untracked 노이즈(log) 무시 → fresh" "fresh" "$(cad_compas
 touch -t 203001010000 "$GP/app.rb"                            # tracked 코드가 최신
 assert_eq "git: tracked 코드 최신 → stale"          "stale" "$(cad_compass_stale "$GP")"
 rm -rf "$GP"
+
+# --- linked worktree(raw git / Orca 공통) → 게이트 판정 스킵 ("worktree") ---
+# 정책: 격리 트리는 잠정 작업(폐기 가능) + Orca 기본 병합=push+PR → 정합은 주 체크아웃에서 회수.
+# compass가 setup hook으로 심링크돼 "존재"해도 게이트가 물면 안 된다(= 쓰기 유예 정책).
+WT="$(mktemp -d)"
+git init -q "$WT/main-co"
+git -C "$WT/main-co" config user.email t@t; git -C "$WT/main-co" config user.name t
+mkdir "$WT/main-co/compass"; echo ctx > "$WT/main-co/compass/context.md"; echo v1 > "$WT/main-co/app.rb"
+printf 'compass/\n' > "$WT/main-co/.gitignore"
+git -C "$WT/main-co" add -A >/dev/null 2>&1; git -C "$WT/main-co" commit -qm init
+git -C "$WT/main-co" worktree add -q "$WT/wt" -b feat 2>/dev/null
+
+# compass 유무와 무관하게 linked worktree면 일관되게 스킵(호출자 입장에서 판정 자체가 무의미)
+assert_eq "worktree: compass 부재여도 → worktree(스킵)" "worktree" "$(cad_compass_stale "$WT/wt")"
+
+ln -s "$WT/main-co/compass" "$WT/wt/compass"     # setup hook이 심링크로 읽기 상속시킨 상황
+touch -t 202601010000 "$WT/main-co/compass/context.md"
+touch -t 203001010000 "$WT/wt/app.rb"            # 소스가 compass보다 최신 = 평소라면 stale
+assert_eq "worktree: compass 있고 소스 최신이어도 → worktree(스킵)" "worktree" "$(cad_compass_stale "$WT/wt")"
+
+touch -t 203001010000 "$WT/main-co/app.rb"
+assert_eq "주 체크아웃: 회귀 없이 stale 판정" "stale" "$(cad_compass_stale "$WT/main-co")"
+git -C "$WT/main-co" worktree remove "$WT/wt" --force 2>/dev/null; rm -rf "$WT"
