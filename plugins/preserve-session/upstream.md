@@ -1,8 +1,8 @@
 ---
 plugin: preserve-session
-plugin_ack: v2.1.170
-plugin_applied: v2.1.170
-updated_at: 2026-06-10
+plugin_ack: v2.1.212
+plugin_applied: v2.1.212
+updated_at: 2026-07-18
 ---
 
 <!-- Latest Claude Code release is fetched dynamically via Shields.io in README. -->
@@ -21,7 +21,50 @@ Claude Code 릴리스가 이 플러그인에 미치는 영향 추적.
 
 _비어 있음._
 
+## 🔬 검증 완료 (v2.1.212 실측 — 재발 시 재검토)
+
+sweep에서 impact:none으로 판정했던 두 엣지 조건을 **실제 라이브 테스트로 확정**(2026-07-18). 둘 다 현재 CLI에서 **비이슈**. 단 검증은 v2.1.212 한정이므로 재검토 트리거를 명시. 코드 가드는 추가하지 않음(실측상 불필요 + 추측 가드는 정상 파일 오탐).
+
+### W1 — auto mode transcript-변조 차단 규칙 × copy/move (v2.1.205) → **비이슈 확정**
+- **릴리스**: "Added an auto mode rule that blocks tampering with session transcript files."
+- **실측 (3단 테스트, `--permission-mode auto`)**:
+  - **Q-A**: bash 명령 문자열에 `~/.claude/projects/….jsonl`을 직접 넣고 append → **분류기가 하드 차단** ("권한 분류기가 이 동작을 차단"). 파일 불변. → 규칙은 **명령 문자열의 transcript 경로를 패턴 매칭**.
+  - **Q-B decisive**: 실제 `move.sh`를 실제 호출 방식(`bash <plugin>/hooks/move.sh <src>`)으로 auto mode 실행 → **정상 실행, 세션 src→dst 이동 완료, 차단 없음**.
+- **왜 안 막히나**: 우리 커맨드 문자열은 플러그인 스크립트 경로 + 일반 소스 경로만 노출하고 **transcript 경로(`~/.claude/projects`)를 포함하지 않음**. 실제 쓰기는 Python 내부(os.replace)라 문자열 기반 분류기가 가로채지 못함.
+- **재검토 트리거**: CC가 이 규칙을 **파일시스템/샌드박스 레벨 가로채기**로 바꾸면(명령 문자열 무관하게 `~/.claude/projects` 쓰기 차단) copy/move가 auto mode에서 막힐 수 있음. 그때 커맨드 문서에 "auto mode에선 수동 승인 필요" 안내 추가.
+
+### W2 — `/fork` 포인터-stub transcript × copy/move rewrite (v2.1.118 도입) → **비이슈 확정**
+- **타임라인**: v2.1.118(2026-04-23) "`/fork`이 부모 대화 전체를 쓰던 것 → pointer를 쓰고 read 시 hydrate". v2.1.212(2026-07-17) `/fork`이 대화를 새 background 세션으로 **copy**. ※ v2.1.118은 과거 baseline sweep(113~170)이 놓친 것 — 이번에 소급 포착.
+- **실측 (실제 fork 생성 + 파일 구조 분석)**: `claude -p --session-id` seed 세션 → `claude -p --resume <sid> --fork-session` 포크 → 결과 `.jsonl`:
+  - **자기완결 full transcript** (25줄 = seed 15줄 + 새 턴, 59KB). seed 내용(SEED-ALPHA) 통째 포함.
+  - 모든 `sessionId`가 **새 UUID**뿐, 부모 sid 참조 **없음**, pointer/hydrate/parentSession 필드 **없음**.
+- **결론**: 디스크상 fork `.jsonl`은 **우리 copy.sh 산출물과 구조 동일**(전 sessionId rewrite된 self-contained transcript). copy/move에게 그냥 평범한 세션 → **가드 불필요, 깨질 리스크 없음**. v2.1.118의 "pointer" 최적화는 디스크 `.jsonl` 표면이 아닌 내부 표현이거나 v2.1.212 "copies"로 대체됨.
+- **재검토 트리거**: 향후 CC가 fork를 **디스크상 pointer-stub `.jsonl`**(부모 참조, 소용량)로 저장하면 copy.sh의 sessionId rewrite가 hydrate를 깰 수 있음. 그때 "pointer 감지 시 skip+경고" 가드 TDD 추가. (참고: copy.sh는 모르는 라인 verbatim 보존이라 그 경우에도 데이터 손실은 없고 최악이 "hydrate 실패".)
+
 ## ✅ Applied
+
+<details><summary>v2.1.172~212 (2026-06-10~07-17) — no-op apply (impact: none; W1/W2 watch 분리)</summary>
+
+**Sweep 범위**: v2.1.170(직전 ack) 이후 34개 릴리스(172~212, 중간 yank 번호 171/180/182/184/188/189/192/194 등 제외). 34개 전체를 도메인 키워드(SessionStart 훅·transcript·resume·slug·path·cwd·registry·cleanup·plugin manifest·경로 인코딩)로 스크리닝 → 8개만 표면 접촉, 26개는 명백 무관(VSCode·subagent·background agent·remote control·MCP·/plugin UI·LSP·screen-reader 등).
+
+**도메인 접촉 8건 판정**:
+- **v2.1.181** — 30일 transcript cleanup 경합으로 idle 세션 히스토리 삭제하던 CC 자체 버그 픽스. 우리 존재 이유(세션 보존) 도메인의 **유리한 픽스**. slug/registry 무관.
+- **v2.1.196** — (a) `/cd`로 옮긴 세션이 특수문자 경로에서 옛 디렉토리 resume 목록에 재등장하던 CC 내부 picker(cwd 필터) 픽스 — 우리 커맨드/slug 무관, v1.2.0 "picker=cwd 필터" 발견과 정합. (b) `claude plugin validate`가 source `"."` 스킵/첫 에러서 중단하던 것 픽스 — 우리 source는 `./plugins/...`라 무관, dev workflow 소폭 개선.
+- **v2.1.199** — `SessionStart`/`Setup`/`SubagentStart` 훅이 **exit code 2**로 죽을 때 stderr 숨기던 것 → transcript 노출. 우리 훅은 `exit 0`만 써서 동작 변화 없음. **Forward-note**: 향후 치명적 초기화 실패를 사용자에게 알릴 새 수단(exit 2 + stderr)이 생김.
+- **v2.1.204** — headless 세션 SessionStart 훅 이벤트 미스트리밍 → remote worker idle-reap 픽스. **유리**(우리 훅 신뢰성).
+- **v2.1.205** — auto mode transcript-변조 차단 규칙 → **W1, 라이브 테스트로 비이슈 확정**(우리 커맨드 문자열이 transcript 경로 미노출 → 분류기 통과, 실제 move.sh auto mode 실행 성공). 검증 상세는 위 🔬 섹션.
+- **v2.1.207** — plugin hook shell-form `${user_config.*}` 거부(injection 픽스). 우리는 `${CLAUDE_PLUGIN_ROOT}`(빌트인)만 쓰고 pluginConfigs 미선언 → **v2.1.212에서 `claude plugin validate` 통과로 무영향 실증**.
+- **v2.1.208 / v2.1.212** — transcript 크기 축소(file-history backup 프루닝) / assistant 메시지에 reasoning-effort 필드 신규. 둘 다 additive·백업층 변경 — search.sh/copy.sh/move.sh는 필드 선택적 파싱이라 무영향.
+- **fork 계열(v2.1.181/187/198/203/208/212)** — `/fork`은 같은 프로젝트 내 대화 분기(경로-복원인 우리와 직교, 상호 대체 아님). 포인터-stub 저장 리스크 → **W2, 실제 fork 생성해 비이슈 확정**(디스크 `.jsonl`은 self-contained full transcript, copy.sh 산출물과 동구조). 검증 상세는 위 🔬 섹션.
+
+**실증**:
+- `claude plugin validate .` → v2.1.212에서 `✔ Validation passed` (경고 1건은 v2.1.145부터의 CLAUDE.md 권고, 무해).
+- 현재 CLI `2.1.212`. 이 세션이 최신 라인에서 정상 시작 — SessionStart 훅 발동, hash.txt → registry 매핑 동작.
+- 사용자 세션 전수 스캔: fork/pointer 마커 0건 (W2 비발현 확인).
+
+**결론**: 코드 변경 0건. ack/applied → v2.1.212 전진. 미발현 엣지 2건은 Watch 섹션(W1/W2)에 재현 절차와 함께 박제.
+
+</details>
 
 <details><summary>v2.1.157~170 (2026-05-29~06-09) — no-op apply (impact: none)</summary>
 
