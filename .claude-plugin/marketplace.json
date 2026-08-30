@@ -44,6 +44,17 @@
       "source": "./plugins/call-it-a-day",
       "category": "productivity",
       "keywords": ["daily-log", "obsidian", "knowledge-capture", "compass", "wrap-up"]
+    },
+    {
+      "name": "x-twitter-scraper",
+      "description": "Plan Xquik X/Twitter data workflows with REST API routing, MCP setup, SDKs, webhooks, exports, monitoring, and confirmation-gated actions.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Xquik"
+      },
+      "source": "./plugins/x-twitter-scraper",
+      "category": "data",
+      "keywords": ["x", "twitter", "xquik", "api", "mcp", "sdk", "webhooks", "monitoring", "exports"]
     }
   ]
 }
