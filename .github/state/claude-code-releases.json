@@ -1,7 +1,13 @@
 {
-  "last_updated": "2026-11-06T14:08:00Z",
+  "last_updated": "2026-11-06T20:46:16Z",
   "source": "https://github.com/anthropics/claude-code/releases",
   "releases": [
+    {
+      "tag": "v2.1.319",
+      "published": "2026-11-06",
+      "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.319",
+      "keyword_hits": 47
+    },
     {
       "tag": "v2.1.318",
       "published": "2026-11-04",
